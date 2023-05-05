@@ -15,8 +15,7 @@
 
 6. Data management system: To manage the data pipeline and ensure its efficient operation, it is important to use a suitable data management system such as Apache Airflow, Luigi or Apache NiFi. These systems can be used to schedule and orchestrate the various stages of the pipeline, monitor its performance and ensure its reliability and scalability.
 
-<img width="744" alt="image" src="https://user-images.githubusercontent.com/127101611/236419969-84e0aa4b-7213-4ea2-aa99-670c5e68f777.png">
-
+![Group 1](https://user-images.githubusercontent.com/127101611/236421144-531d173c-d87a-490f-aafe-034ef11c0640.png)
 
 
 
