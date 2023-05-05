@@ -15,8 +15,6 @@
 
 6. Data management system: To manage the data pipeline and ensure its efficient operation, it is important to use a suitable data management system such as Apache Airflow, Luigi or Apache NiFi. These systems can be used to schedule and orchestrate the various stages of the pipeline, monitor its performance and ensure its reliability and scalability.
 
-By following these steps and best practices, you can implement an efficient and effective air quality monitoring pipeline using Sentinel-5P satellite data.
-
 
 
 
