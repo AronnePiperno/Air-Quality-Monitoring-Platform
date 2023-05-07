@@ -19,6 +19,9 @@
 
 ![Group 1](https://user-images.githubusercontent.com/127101611/236421144-531d173c-d87a-490f-aafe-034ef11c0640.png)
 
+## Data Pipeline
+
+![image](https://user-images.githubusercontent.com/96500221/236688855-01757c5f-44fd-4025-92ff-5aa5d8cd20db.png)
 
 
 
