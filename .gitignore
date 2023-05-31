@@ -1,0 +1,6 @@
+data/
+db/
+resized/
+test/
+venv/
+.idea/
