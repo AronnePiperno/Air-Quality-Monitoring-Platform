@@ -84,7 +84,6 @@ def main():
             to_database(first=False, file=file, db_path=db_path, product=pro+"TEST")
 """
 
-
 def to_database(first: bool, file: str, db_path: str, product: str) -> None:
     timestep_db = xr.open_dataset(file, group='PRODUCT')
     if first:
