@@ -18,10 +18,11 @@ def resize_db(path_in: str, path_out: str) -> None:
         time.sleep(10)
         print("resizing db")
         try:
-            filestmp = glob.glob(path_in + '/*.tmp')
-            if len(filestmp) == 0:
+
+            if len(glob.glob(path_in + '/*.nc')) == 0 and len(glob.glob(path_in + '/*.tmp')) == 0:
                 print("exit resizing db")
                 break
+
             files = glob.glob(path_in + '/*.nc')
 
             for file in files:
@@ -41,8 +42,8 @@ def main():
                 'L2__O3____',
                 'L2__SO2___'
                 ]
-    begin = '2023-05-14T20:00:00.000Z'
-    end = '2023-05-16T23:59:59.999Z'
+    begin = '2023-04-01T00:00:00.000Z'
+    end = '2023-04-05T23:59:59.999Z'
     output_dir = './data'
     db_path = './db'
     resized_path = './resized'
@@ -66,7 +67,7 @@ def main():
         t2.join()
 
 
-        db = xr.open_mfdataset(resized_path + '/*.nc', combine='nested', concat_dim='time')
+        db = xr.open_mfdataset(resized_path + '/*.nc', combine='by_coords')
         db.to_zarr(os.path.join(db_path, pro+"TEST"), mode='w', consolidated=True)
 
         delete_files = glob.glob(resized_path + '/*.nc')
