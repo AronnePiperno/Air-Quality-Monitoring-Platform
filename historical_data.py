@@ -5,6 +5,8 @@ import multiprocessing
 import xarray as xr
 import threading
 import time
+from dask.distributed import Client
+
 
 def multi_download(output_dir: str, result: dict) -> None:
     with multiprocessing.Pool(10) as pool:
@@ -17,7 +19,7 @@ def resize_db(path_in: str, path_out: str) -> None:
     while True:
         time.sleep(10)
         print("resizing db")
-        try:
+        """try:
 
             if len(glob.glob(path_in + '/*.nc')) == 0 and len(glob.glob(path_in + '/*.tmp')) == 0:
                 print("exit resizing db")
@@ -28,13 +30,27 @@ def resize_db(path_in: str, path_out: str) -> None:
             for file in files:
                 file_name = file.split('/')[-1]
                 ds = xr.open_dataset(file, group='PRODUCT')
-                ds.to_netcdf(path_out + '/' + file_name, mode='w', encoding={'time_utc': {'dtype': 'S1'}})
+                #ds.to_netcdf(path_out + '/' + file_name, mode='w', encoding={'time_utc': {'dtype': 'S1'}})
+                ds.to_netcdf(path_out + '/' + file_name, mode='w')
                 os.remove(file)
         except:
             print("Error resizing db")
-            continue
+            continue"""
+        if len(glob.glob(path_in + '/*.nc')) == 0 and len(glob.glob(path_in + '/*.tmp')) == 0:
+            print("exit resizing db")
+            break
+
+        files = glob.glob(path_in + '/*.nc')
+
+        for file in files:
+            file_name = file.split('/')[-1]
+            ds = xr.open_dataset(file, group='PRODUCT')
+            ds.to_netcdf(path_out + '/' + file_name, mode='w', format="NETCDF4", encoding={'time_utc': {'dtype': 'S1'}})
+            #ds.to_netcdf(path_out + '/' + file_name, mode='w', fill_value=0)
+            os.remove(file)
 
 def main():
+    c = Client(n_workers=os.cpu_count()-2, threads_per_worker=1)
     products = ['L2__CH4___',
                 'L2__CO____',
                 'L2__HCHO__',
@@ -42,8 +58,8 @@ def main():
                 'L2__O3____',
                 'L2__SO2___'
                 ]
-    begin = '2023-04-01T00:00:00.000Z'
-    end = '2023-04-05T23:59:59.999Z'
+    begin = '2022-03-14T00:00:00.000Z'
+    end = '2022-03-15T23:59:59.999Z'
     output_dir = './data'
     db_path = './db'
     resized_path = './resized'
@@ -67,13 +83,15 @@ def main():
         t2.join()
 
 
-        db = xr.open_mfdataset(resized_path + '/*.nc', combine='by_coords')
+        #db = xr.open_mfdataset(resized_path + '/*.nc', combine='nested', concat_dim='time')
+        db = xr.open_mfdataset(resized_path + '/*.nc', combine='nested', concat_dim='time_utc')
         db.to_zarr(os.path.join(db_path, pro+"TEST"), mode='w', consolidated=True)
 
         delete_files = glob.glob(resized_path + '/*.nc')
 
         for file in delete_files:
             os.remove(file)
+
         """
         files = glob.glob(resized_path + '/*.nc')
 
