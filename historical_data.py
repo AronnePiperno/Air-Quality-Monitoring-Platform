@@ -59,7 +59,7 @@ def main():
                 'L2__SO2___'
                 ]
     begin = '2022-03-14T00:00:00.000Z'
-    end = '2022-03-15T23:59:59.999Z'
+    end = '2022-03-16T23:59:59.999Z'
     output_dir = './data'
     db_path = './db'
     resized_path = './resized'
@@ -83,8 +83,7 @@ def main():
         t2.join()
 
 
-        #db = xr.open_mfdataset(resized_path + '/*.nc', combine='nested', concat_dim='time')
-        db = xr.open_mfdataset(resized_path + '/*.nc', combine='nested', concat_dim='time_utc')
+        db = xr.open_mfdataset(resized_path + '/*.nc', combine='nested', concat_dim='time')
         db.to_zarr(os.path.join(db_path, pro+"TEST"), mode='w', consolidated=True)
 
         delete_files = glob.glob(resized_path + '/*.nc')
