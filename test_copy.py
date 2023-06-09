@@ -92,7 +92,7 @@ def display_data():
 
 
     # Select the pollutant
-    selected_values = st.selectbox("Select the pollutant you are looking for:", ["Overall", "CH4", "CO", "HCHO", "NO2", "O3", "SO2"])
+    selected_values = st.selectbox("Select the pollutant you are looking for:", ["HCHO", "NO2", "O3", "SO2", "Overall", "CH4", "CO"])
 
     # Overall
     if "Overall" in selected_values:
