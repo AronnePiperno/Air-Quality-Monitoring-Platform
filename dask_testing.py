@@ -32,6 +32,8 @@ if __name__ == '__main__':
     # Compute and print the index
     indeces = da.compute(index)
     print(indeces)"""
+
+
     since = timeit.default_timer()
     client = Client(n_workers=3, threads_per_worker=3, memory_limit='10GB')
     dask.config.set({'array.slicing.split_large_chunks': False})
