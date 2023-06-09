@@ -92,7 +92,7 @@ def display_data():
 
 
     # Select the pollutant
-    selected_values = st.multiselect("Select the pollutant you are looking for:", ["Overall", "CH4", "CO", "HCHO", "NO2", "O3", "SO2"])
+    selected_values = st.selectbox("Select the pollutant you are looking for:", ["Overall", "CH4", "CO", "HCHO", "NO2", "O3", "SO2"])
 
     # Overall
     if "Overall" in selected_values:
@@ -222,11 +222,13 @@ def display_data():
     # CH4
     if "CH4" in selected_values:
 
+        a1, a2 = st.columns([12,3])
+
         # Description
 
         st.write("")
-        st.markdown("<h1 style='font-size: 30px; font-family: Roboto, sans-serif;'>Methane (CH4)</h1>", unsafe_allow_html=True)
-        st.markdown(
+        a1.markdown("<h1 style='font-size: 30px; font-family: Roboto, sans-serif;'>Methane (CH4)</h1>", unsafe_allow_html=True)
+        a1.markdown(
             """
             <div style="text-align: justify; font-family: Roboto; font-size: 13px; margin-top: -10px">
                 Methane (CH4) is a greenhouse gas and a significant component of air pollution. It is primarily emitted from natural sources such as wetlands, as well as human activities including agriculture, fossil fuel extraction, and waste management. Methane is a potent greenhouse gas, meaning it has a high global warming potential and contributes to climate change.
@@ -238,15 +240,12 @@ def display_data():
             """,
             unsafe_allow_html=True)
 
-
-        a1, a2 = st.columns([3,12])
-
         # Scorecard
 
         mean, values, dates = kpis(latitude,longitude,"L2__CH4___")
         
-        a1.write("")
-        a1.markdown(
+        a2.write("")
+        a2.markdown(
             """
             <div style='display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 20px; border-radius: 10px; border: 1px solid black; margin-top: 40px;'>
                 <h2 style='text-align: center; font-size: 25px;'>CH4 value for {}</h2>
@@ -257,17 +256,19 @@ def display_data():
 
         # Graph
 
-        a2.write("")
-        a2.pyplot(graph_setup(dates, values, city, "Methane"))
+        st.write("")
+        st.pyplot(graph_setup(dates, values, city, "Methane"))
 
     # CO
     if "CO" in selected_values:
 
+        a1, a2 = st.columns([12,3])
+
         # Description
 
         st.write("")
-        st.markdown("<h1 style='font-size: 30px; font-family: Roboto, sans-serif;'>Carbon Monoxide (CO)</h1>", unsafe_allow_html=True)
-        st.markdown(
+        a1.markdown("<h1 style='font-size: 30px; font-family: Roboto, sans-serif;'>Carbon Monoxide (CO)</h1>", unsafe_allow_html=True)
+        a1.markdown(
             """
             <div style="text-align: justify; font-family: Roboto; font-size: 13px; margin-top: -10px">
                 Carbon Monoxide (CO) is a colorless and odorless gas that is produced primarily from the incomplete combustion of fossil fuels and biomass. It is a common air pollutant, especially in urban areas with high traffic and industrial activities.
@@ -279,15 +280,13 @@ def display_data():
             </div>
             """,
             unsafe_allow_html=True)
-        
-        a1, a2 = st.columns([3,12])
 
         # Scorecard
 
         mean, values, dates = kpis(latitude,longitude,"L2__CO____")
         
-        a1.write("")
-        a1.markdown(
+        a2.write("")
+        a2.markdown(
             """
             <div style='display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 20px; border-radius: 10px; border: 1px solid black; margin-top: 40px;'>
                 <h2 style='text-align: center; font-size: 25px;'>CO value for {}</h2>
@@ -298,17 +297,19 @@ def display_data():
 
         # Graph
 
-        a2.write("")
-        a2.pyplot(graph_setup(dates, values, city, "Carbon Monoxide"))
+        st.write("")
+        st.pyplot(graph_setup(dates, values, city, "Carbon Monoxide"))
 
     # HCHO
     if "HCHO" in selected_values:
 
+        a1, a2 = st.columns([12,3])
+
         # Description
 
         st.write("")
-        st.markdown("<h1 style='font-size: 30px; font-family: Roboto, sans-serif;'>Formaldehyde (HCHO)</h1>", unsafe_allow_html=True)
-        st.markdown(
+        a1.markdown("<h1 style='font-size: 30px; font-family: Roboto, sans-serif;'>Formaldehyde (HCHO)</h1>", unsafe_allow_html=True)
+        a1.markdown(
             """
             <div style="text-align: justify; font-family: Roboto; font-size: 13px; margin-top: -10px">
                 Formaldehyde (HCHO) is a colorless gas with a strong, pungent odor. It is a volatile organic compound (VOC) that is released into the air from various sources, including industrial processes, combustion of fossil fuels, and certain household products and materials.
@@ -320,15 +321,13 @@ def display_data():
             </div>
             """,
             unsafe_allow_html=True)
-        
-        a1, a2 = st.columns([3,12])
 
         # Scorecard
 
         mean, values, dates = kpis(latitude,longitude,"L2__HCHO__")
         
-        a1.write("")
-        a1.markdown(
+        a2.write("")
+        a2.markdown(
             """
             <div style='display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 20px; border-radius: 10px; border: 1px solid black; margin-top: 40px;'>
                 <h2 style='text-align: center; font-size: 25px;'>HCHO value for {}</h2>
@@ -339,18 +338,20 @@ def display_data():
 
         # Graph
         
-        a2.write("")
-        a2.pyplot(graph_setup(dates, values, city, "Formaldehyde"))
+        st.write("")
+        st.pyplot(graph_setup(dates, values, city, "Formaldehyde"))
 
 
     # NO2
     if "NO2" in selected_values:
 
+        a1, a2 = st.columns([12,3])
+
         # Description
 
         st.write("")
-        st.markdown("<h1 style='font-size: 30px; font-family: Roboto, sans-serif;'>Nitrogen dioxide (NO2)</h1>", unsafe_allow_html=True)
-        st.markdown(
+        a1.markdown("<h1 style='font-size: 30px; font-family: Roboto, sans-serif;'>Nitrogen dioxide (NO2)</h1>", unsafe_allow_html=True)
+        a1.markdown(
             """
             <div style="text-align: justify; font-family: Roboto; font-size: 13px; margin-top: -10px">
                 Nitrogen Dioxide (NO2) is a reddish-brown gas that is part of the nitrogen oxide (NOx) family of air pollutants. It is primarily emitted from the burning of fossil fuels, particularly in vehicles, power plants, and industrial processes. NO2 is also formed through the atmospheric oxidation of nitric oxide (NO).
@@ -362,15 +363,13 @@ def display_data():
             </div>
             """,
             unsafe_allow_html=True)
-        
-        a1, a2 = st.columns([3,12])
 
         # Scorecard
 
         mean, values, dates = kpis(latitude,longitude,"L2__NO2___")
         
-        a1.write("")
-        a1.markdown(
+        a2.write("")
+        a2.markdown(
             """
             <div style='display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 20px; border-radius: 10px; border: 1px solid black; margin-top: 40px;'>
                 <h2 style='text-align: center; font-size: 25px;'>NO2 value for {}</h2>
@@ -381,16 +380,21 @@ def display_data():
 
         # Graph
 
-        a2.write("")
-        a2.pyplot(graph_setup(dates, values, city, "Nitrogen Dioxide"))
+        st.write("")
+        st.pyplot(graph_setup(dates, values, city, "Nitrogen Dioxide"))
         
 
         
     # O3
     if "O3" in selected_values:
+
+        a1, a2 = st.columns([12,3])
+
+        # Description
+
         st.write("")
-        st.markdown("<h1 style='font-size: 30px; font-family: Roboto, sans-serif;'>Ground-level Ozone (O3)</h1>", unsafe_allow_html=True)
-        st.markdown(
+        a1.markdown("<h1 style='font-size: 30px; font-family: Roboto, sans-serif;'>Ground-level Ozone (O3)</h1>", unsafe_allow_html=True)
+        a1.markdown(
             """
             <div style="text-align: justify; font-family: Roboto; font-size: 13px; margin-top: -10px">
                 Ground-level Ozone (O3) is a secondary pollutant formed when nitrogen oxides (NOx) and volatile organic compounds (VOCs) react in the presence of sunlight. It is a major component of smog and is primarily found closer to the Earth's surface. While ozone in the upper atmosphere acts as a protective layer, ground-level ozone poses risks to human health.
@@ -401,15 +405,13 @@ def display_data():
             </div>
             """,
             unsafe_allow_html=True)
-        
-        a1, a2 = st.columns([3,12])
 
         # Scorecard
 
         mean, values, dates = kpis(latitude,longitude,"L2__O3____")
         
-        a1.write("")
-        a1.markdown(
+        a2.write("")
+        a2.markdown(
             """
             <div style='display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 20px; border-radius: 10px; border: 1px solid black; margin-top: 40px;'>
                 <h2 style='text-align: center; font-size: 25px;'>O3 value for {}</h2>
@@ -420,14 +422,19 @@ def display_data():
 
         # Graph
 
-        a2.write("")
-        a2.pyplot(graph_setup(dates, values, city, "Ground-level Ozone"))
+        st.write("")
+        st.pyplot(graph_setup(dates, values, city, "Ground-level Ozone"))
 
     # SO2
     if "SO2" in selected_values:
+
+        a1, a2 = st.columns([12,3])
+
+        # Description
+
         st.write("")
-        st.markdown("<h1 style='font-size: 30px; font-family: Roboto, sans-serif;'>Sulfur dioxide (SO2)</h1>", unsafe_allow_html=True)
-        st.markdown(
+        a1.markdown("<h1 style='font-size: 30px; font-family: Roboto, sans-serif;'>Sulfur dioxide (SO2)</h1>", unsafe_allow_html=True)
+        a1.markdown(
             """
             <div style="text-align: justify; font-family: Roboto; font-size: 13px; margin-top: -10px">
                 Sulfur Dioxide (SO2) is a colorless gas with a pungent odor that is primarily emitted from the burning of fossil fuels, particularly in power plants and industrial processes that involve the combustion of sulfur-containing fuels such as coal and oil. SO2 can also be released from natural sources such as volcanic eruptions.
@@ -439,15 +446,13 @@ def display_data():
             </div>
             """,
             unsafe_allow_html=True)
-        
-        a1, a2 = st.columns([3,12])
 
         # Scorecard
 
         mean, values, dates = kpis(latitude,longitude,"L2__SO2___")
         
-        a1.write("")
-        a1.markdown(
+        a2.write("")
+        a2.markdown(
             """
             <div style='display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 20px; border-radius: 10px; border: 1px solid black; margin-top: 40px;'>
                 <h2 style='text-align: center; font-size: 25px;'>SO2 value for {}</h2>
@@ -458,8 +463,8 @@ def display_data():
 
         # Graph
 
-        a2.write("")
-        a2.pyplot(graph_setup(dates, values, city, "Sulfur Dioxide"))
+        st.write("")
+        st.pyplot(graph_setup(dates, values, city, "Sulfur Dioxide"))
 
 # Main function
 def main():
