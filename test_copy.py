@@ -10,7 +10,23 @@ import data_retrieval
 
 st.set_page_config(layout="wide")
 
-from geopy.geocoders import Nominatim
+def kpis(latitude, longitude, product):
+    values, dates = data_retrieval.by_coordinate(latitude, longitude, product)
+    location_average = np.mean(values)
+    location_average_f = "{:.6f}".format(location_average)
+    return location_average_f, values, dates
+
+def graph_setup (dates, values, city, pollutant):
+    fig, ax = plt.subplots()
+    fig.set_size_inches(15, 4)
+    ax.plot(dates, values, label=city)
+    ax.set_xlabel("Date")
+    ax.set_ylabel(pollutant)
+    date_format = mdates.DateFormatter('%m-%d')
+    ax.xaxis.set_major_formatter(date_format)
+    ax.xaxis.set_major_locator(mdates.DayLocator())
+    plt.xticks(rotation=45)
+    return fig
 
 def city_selection():
     # Add custom CSS for the background image
@@ -64,6 +80,8 @@ def display_data():
     location = geolocator.geocode(st.session_state.selected_city)
     longitude = location.longitude
     latitude = location.latitude
+
+    city = st.session_state.selected_city
 
     st.write("<p style='align: center;'><strong>City:</strong></p>", unsafe_allow_html=True)
     st.write("<p style='align: center; margin-top: -15px;'>" + str(location) + "</p>", unsafe_allow_html=True)
@@ -123,10 +141,7 @@ def display_data():
         b1,b2,b3,b4,b5,b6=st.columns(6)
 
         # CH4
-
-        location_average = np.mean(dates_and_mean_values_product(longitude, latitude, "L2__CH4___")[1])
-        location_average_f = "{:.3f}".format(location_average)
-        city = st.session_state.selected_city
+        mean = kpis(latitude,longitude,"L2__CH4___")
         b1.write("")
         b1.markdown(
             """
@@ -134,14 +149,12 @@ def display_data():
                 <h2 style='text-align: center; font-size: 18px;'>CH4 value for {}</h2>
                 <p style='text-align: center; font-size: 40px;'>{}</p>
             </div>
-            """.format(city, location_average_f),
+            """.format(city, mean),
             unsafe_allow_html=True)
         
         # CO
 
-        location_average = np.mean(dates_and_mean_values_product(longitude, latitude, "L2__CO___")[1])
-        location_average_f = "{:.3f}".format(location_average)
-        city = st.session_state.selected_city
+        mean = kpis(latitude,longitude,"L2__CO___")
         b1.write("")
         b1.markdown(
             """
@@ -149,14 +162,12 @@ def display_data():
                 <h2 style='text-align: center; font-size: 18px;'>CO value for {}</h2>
                 <p style='text-align: center; font-size: 40px;'>{}</p>
             </div>
-            """.format(city, location_average_f),
+            """.format(city, mean),
             unsafe_allow_html=True)
 
         # HCHO
 
-        location_average = np.mean(dates_and_mean_values_product(longitude, latitude, "L2__HCHO___")[1])
-        location_average_f = "{:.3f}".format(location_average)
-        city = st.session_state.selected_city
+        mean = kpis(latitude,longitude,"L2__HCHO____")
         b1.write("")
         b1.markdown(
             """
@@ -164,14 +175,12 @@ def display_data():
                 <h2 style='text-align: center; font-size: 18px;'>HCHO value for {}</h2>
                 <p style='text-align: center; font-size: 40px;'>{}</p>
             </div>
-            """.format(city, location_average_f),
+            """.format(city, mean),
             unsafe_allow_html=True)
 
         # NO2
 
-        location_average = np.mean(dates_and_mean_values_product(longitude, latitude, "L2__NO2___")[1])
-        location_average_f = "{:.3f}".format(location_average)
-        city = st.session_state.selected_city
+        mean = kpis(latitude,longitude,"L2__NO2__")
         b1.write("")
         b1.markdown(
             """
@@ -179,14 +188,12 @@ def display_data():
                 <h2 style='text-align: center; font-size: 18px;'>NO2 value for {}</h2>
                 <p style='text-align: center; font-size: 40px;'>{}</p>
             </div>
-            """.format(city, location_average_f),
+            """.format(city, mean),
             unsafe_allow_html=True)
 
         # O3
 
-        location_average = np.mean(dates_and_mean_values_product(longitude, latitude, "L2__O3___")[1])
-        location_average_f = "{:.3f}".format(location_average)
-        city = st.session_state.selected_city
+        mean = kpis(latitude,longitude,"L2__O3___")
         b1.write("")
         b1.markdown(
             """
@@ -194,14 +201,12 @@ def display_data():
                 <h2 style='text-align: center; font-size: 18px;'>O3 value for {}</h2>
                 <p style='text-align: center; font-size: 40px;'>{}</p>
             </div>
-            """.format(city, location_average_f),
+            """.format(city, mean),
             unsafe_allow_html=True)
 
         # SO2
         
-        location_average = np.mean(dates_and_mean_values_product(longitude, latitude, "L2__SO2___")[1])
-        location_average_f = "{:.3f}".format(location_average)
-        city = st.session_state.selected_city
+        mean = kpis(latitude,longitude,"L2__SO2___")
         b1.write("")
         b1.markdown(
             """
@@ -209,7 +214,7 @@ def display_data():
                 <h2 style='text-align: center; font-size: 18px;'>SO2 value for {}</h2>
                 <p style='text-align: center; font-size: 40px;'>{}</p>
             </div>
-            """.format(city, location_average_f),
+            """.format(city, mean),
             unsafe_allow_html=True)
 
  
@@ -238,9 +243,7 @@ def display_data():
 
         # Scorecard
 
-        location_average = np.mean(dates_and_mean_values_product(longitude, latitude, "L2__CH4___")[1])
-        location_average_f = "{:.3f}".format(location_average)
-        city = st.session_state.selected_city
+        mean, values, dates = kpis(latitude,longitude,"L2__CH4___")
         
         a1.write("")
         a1.markdown(
@@ -249,25 +252,13 @@ def display_data():
                 <h2 style='text-align: center; font-size: 25px;'>CH4 value for {}</h2>
                 <p style='text-align: center; font-size: 60px;'>{}</p>
             </div>
-            """.format(city, location_average_f),
+            """.format(city, mean),
             unsafe_allow_html=True)
 
         # Graph
 
-        dates, mean_value = dates_and_mean_values_product(longitude, latitude, "L2__CH4___")
-
-        fig, ax = plt.subplots()
-        fig.set_size_inches(15, 4)
-        ax.plot(dates, mean_value, label="Trento")
-        ax.set_xlabel("Date")
-        ax.set_ylabel("Methane values")
-        date_format = mdates.DateFormatter('%m-%d')
-        ax.xaxis.set_major_formatter(date_format)
-        ax.xaxis.set_major_locator(mdates.DayLocator())
-        #ax.set_ylim(ww_min_by_product("L2__CH4___"), ww_max_by_product("L2__CH4___"))
-        plt.xticks(rotation=45)
         a2.write("")
-        a2.pyplot(fig)
+        a2.pyplot(graph_setup(dates, values, city, "Methane"))
 
     # CO
     if "CO" in selected_values:
@@ -279,7 +270,7 @@ def display_data():
         st.markdown(
             """
             <div style="text-align: justify; font-family: Roboto; font-size: 13px; margin-top: -10px">
-                Carbon monoxide (CO) is a colorless and odorless gas that is produced primarily from the incomplete combustion of fossil fuels and biomass. It is a common air pollutant, especially in urban areas with high traffic and industrial activities.
+                Carbon Monoxide (CO) is a colorless and odorless gas that is produced primarily from the incomplete combustion of fossil fuels and biomass. It is a common air pollutant, especially in urban areas with high traffic and industrial activities.
                 Exposure to elevated levels of carbon monoxide can have adverse health effects. When inhaled, carbon monoxide binds to hemoglobin in the bloodstream, reducing its ability to carry oxygen to body tissues. This can lead to a decrease in oxygen supply to vital organs, including the heart and brain. Symptoms of carbon monoxide poisoning include headache, dizziness, nausea, confusion, and in severe cases, it can even lead to loss of consciousness and death.
                 To mitigate the risks associated with carbon monoxide, it is essential to prevent its formation and limit exposure. This involves implementing measures to improve combustion efficiency and reduce emissions from various sources such as vehicles, industrial processes, and residential heating systems. Regular maintenance of appliances that use fossil fuels, such as furnaces and water heaters, is crucial to ensure proper functioning and prevent the release of carbon monoxide indoors.
                 Monitoring and regulation of carbon monoxide levels are important for maintaining air quality and protecting public health. Many countries have established ambient air quality standards for carbon monoxide to ensure that concentrations remain within acceptable limits.
@@ -293,9 +284,7 @@ def display_data():
 
         # Scorecard
 
-        location_average = np.mean(dates_and_mean_values_product(longitude, latitude, "L2__CO____")[1])
-        location_average_f = "{:.3f}".format(location_average)
-        city = st.session_state.selected_city
+        mean, values, dates = kpis(latitude,longitude,"L2__CO____")
         
         a1.write("")
         a1.markdown(
@@ -304,25 +293,13 @@ def display_data():
                 <h2 style='text-align: center; font-size: 25px;'>CO value for {}</h2>
                 <p style='text-align: center; font-size: 60px;'>{}</p>
             </div>
-            """.format(city, location_average_f),
+            """.format(city, mean),
             unsafe_allow_html=True)
 
         # Graph
 
-        dates, mean_value = dates_and_mean_values_product(longitude, latitude, "L2__CO___")
-
-        fig, ax = plt.subplots()
-        fig.set_size_inches(15, 4)
-        ax.plot(dates, mean_value, label="Trento")
-        ax.set_xlabel("Date")
-        ax.set_ylabel("Carbon monoxide values")
-        date_format = mdates.DateFormatter('%m-%d')
-        ax.xaxis.set_major_formatter(date_format)
-        ax.xaxis.set_major_locator(mdates.DayLocator())
-        #ax.set_ylim(ww_min_by_product("L2__CH4___"), ww_max_by_product("L2__CH4___"))
-        plt.xticks(rotation=45)
         a2.write("")
-        a2.pyplot(fig)
+        a2.pyplot(graph_setup(dates, values, city, "Carbon Monoxide"))
 
     # HCHO
     if "HCHO" in selected_values:
@@ -347,10 +324,8 @@ def display_data():
         a1, a2 = st.columns([3,12])
 
         # Scorecard
-        values, dates = data_retrieval.by_coordinate(latitude, longitude, "L2__HCHO__")
-        location_average = np.mean(values)
-        location_average_f = "{:.6f}".format(location_average)
-        city = st.session_state.selected_city
+
+        mean, values, dates = kpis(latitude,longitude,"L2__HCHO__")
         
         a1.write("")
         a1.markdown(
@@ -359,24 +334,15 @@ def display_data():
                 <h2 style='text-align: center; font-size: 25px;'>HCHO value for {}</h2>
                 <p style='text-align: center; font-size: 60px;'>{}</p>
             </div>
-            """.format(city, location_average_f),
+            """.format(city, mean),
             unsafe_allow_html=True)
 
         # Graph
-
-        fig, ax = plt.subplots()
-        fig.set_size_inches(15, 4)
-        ax.plot(dates, values, label=city)
-        ax.set_xlabel("Date")
-        ax.set_ylabel("Formaldehyde")
-        date_format = mdates.DateFormatter('%m-%d')
-        ax.xaxis.set_major_formatter(date_format)
-        ax.xaxis.set_major_locator(mdates.DayLocator())
-        #ax.set_ylim(ww_min_by_product("L2__CH4___"), ww_max_by_product("L2__CH4___"))
-        plt.xticks(rotation=45)
-        a2.write("")
-        a2.pyplot(fig)
         
+        a2.write("")
+        a2.pyplot(graph_setup(dates, values, city, "Formaldehyde"))
+
+
     # NO2
     if "NO2" in selected_values:
 
@@ -387,7 +353,7 @@ def display_data():
         st.markdown(
             """
             <div style="text-align: justify; font-family: Roboto; font-size: 13px; margin-top: -10px">
-                Nitrogen dioxide (NO2) is a reddish-brown gas that is part of the nitrogen oxide (NOx) family of air pollutants. It is primarily emitted from the burning of fossil fuels, particularly in vehicles, power plants, and industrial processes. NO2 is also formed through the atmospheric oxidation of nitric oxide (NO).
+                Nitrogen Dioxide (NO2) is a reddish-brown gas that is part of the nitrogen oxide (NOx) family of air pollutants. It is primarily emitted from the burning of fossil fuels, particularly in vehicles, power plants, and industrial processes. NO2 is also formed through the atmospheric oxidation of nitric oxide (NO).
                 Exposure to elevated levels of nitrogen dioxide can have adverse health effects. It is a respiratory irritant and can worsen respiratory conditions such as asthma and chronic obstructive pulmonary disease (COPD). Prolonged exposure to NO2 can lead to the inflammation of the airways and increased susceptibility to respiratory infections. In areas with high levels of NO2, individuals may experience symptoms such as coughing, wheezing, shortness of breath, and chest tightness.
                 Nitrogen dioxide also contributes to the formation of ground-level ozone and particulate matter, which further exacerbate air quality issues and respiratory health risks. Additionally, NO2 plays a role in the formation of acid rain and contributes to the overall air pollution problem.
                 To reduce NO2 emissions and mitigate its impact on air quality, various measures can be implemented. These include the use of cleaner fuels and technologies in transportation, such as electric vehicles and improved emission control systems in vehicles and industrial facilities. Urban planning strategies that promote sustainable transportation and reduce traffic congestion can also help reduce NO2 levels in urban areas.
@@ -401,9 +367,7 @@ def display_data():
 
         # Scorecard
 
-        location_average = np.mean(dates_and_mean_values_product(longitude, latitude, "L2__NO2___")[1])
-        location_average_f = "{:.3f}".format(location_average)
-        city = st.session_state.selected_city
+        mean, values, dates = kpis(latitude,longitude,"L2__NO2___")
         
         a1.write("")
         a1.markdown(
@@ -412,25 +376,13 @@ def display_data():
                 <h2 style='text-align: center; font-size: 25px;'>NO2 value for {}</h2>
                 <p style='text-align: center; font-size: 60px;'>{}</p>
             </div>
-            """.format(city, location_average_f),
+            """.format(city, mean),
             unsafe_allow_html=True)
 
         # Graph
 
-        dates, mean_value = dates_and_mean_values_product(longitude, latitude, "L2__NO2___")
-
-        fig, ax = plt.subplots()
-        fig.set_size_inches(15, 4)
-        ax.plot(dates, mean_value, label="Trento")
-        ax.set_xlabel("Date")
-        ax.set_ylabel("Nitrogen dioxide")
-        date_format = mdates.DateFormatter('%m-%d')
-        ax.xaxis.set_major_formatter(date_format)
-        ax.xaxis.set_major_locator(mdates.DayLocator())
-        #ax.set_ylim(ww_min_by_product("L2__CH4___"), ww_max_by_product("L2__CH4___"))
-        plt.xticks(rotation=45)
         a2.write("")
-        a2.pyplot(fig)
+        a2.pyplot(graph_setup(dates, values, city, "Nitrogen Dioxide"))
         
 
         
@@ -441,7 +393,7 @@ def display_data():
         st.markdown(
             """
             <div style="text-align: justify; font-family: Roboto; font-size: 13px; margin-top: -10px">
-                Ground-level ozone (O3) is a secondary pollutant formed when nitrogen oxides (NOx) and volatile organic compounds (VOCs) react in the presence of sunlight. It is a major component of smog and is primarily found closer to the Earth's surface. While ozone in the upper atmosphere acts as a protective layer, ground-level ozone poses risks to human health.
+                Ground-level Ozone (O3) is a secondary pollutant formed when nitrogen oxides (NOx) and volatile organic compounds (VOCs) react in the presence of sunlight. It is a major component of smog and is primarily found closer to the Earth's surface. While ozone in the upper atmosphere acts as a protective layer, ground-level ozone poses risks to human health.
                 Exposure to elevated levels of ground-level ozone can have adverse health consequences. It is known to be a respiratory irritant, leading to symptoms such as coughing, throat irritation, chest discomfort, and shortness of breath. Individuals with respiratory conditions like asthma and chronic obstructive pulmonary disease (COPD) are particularly vulnerable and may experience worsened symptoms. Prolonged exposure to ozone can cause reduced lung function, increased susceptibility to respiratory infections, and the development of chronic respiratory issues.
                 To ensure clean air and protect public health, it is crucial to maintain ground-level ozone concentrations within acceptable limits. Regulatory agencies like the Environmental Protection Agency (EPA) establish air quality standards for ozone. In the United States, the current standard for ozone is 0.070 parts per million (ppm) averaged over an 8-hour period. However, even lower levels are desired to achieve optimal air quality and minimize health risks.
                 Efforts to reduce ground-level ozone focus on controlling the emissions of NOx and VOCs. This involves implementing stringent regulations for industrial processes, vehicle emissions, and consumer products. Additionally, public awareness campaigns and adherence to air quality advisories are important to mitigate exposure during periods of elevated ozone levels.
@@ -454,9 +406,7 @@ def display_data():
 
         # Scorecard
 
-        location_average = np.mean(dates_and_mean_values_product(longitude, latitude, "L2__O3____")[1])
-        location_average_f = "{:.3f}".format(location_average)
-        city = st.session_state.selected_city
+        mean, values, dates = kpis(latitude,longitude,"L2__O3___")
         
         a1.write("")
         a1.markdown(
@@ -465,25 +415,13 @@ def display_data():
                 <h2 style='text-align: center; font-size: 25px;'>O3 value for {}</h2>
                 <p style='text-align: center; font-size: 60px;'>{}</p>
             </div>
-            """.format(city, location_average_f),
+            """.format(city, mean),
             unsafe_allow_html=True)
 
         # Graph
 
-        dates, mean_value = dates_and_mean_values_product(longitude, latitude, "L2__O3___")
-
-        fig, ax = plt.subplots()
-        fig.set_size_inches(15, 4)
-        ax.plot(dates, mean_value, label="Trento")
-        ax.set_xlabel("Date")
-        ax.set_ylabel("Ground-level ozone")
-        date_format = mdates.DateFormatter('%m-%d')
-        ax.xaxis.set_major_formatter(date_format)
-        ax.xaxis.set_major_locator(mdates.DayLocator())
-        #ax.set_ylim(ww_min_by_product("L2__CH4___"), ww_max_by_product("L2__CH4___"))
-        plt.xticks(rotation=45)
         a2.write("")
-        a2.pyplot(fig)
+        a2.pyplot(graph_setup(dates, values, city, "Ground-level Ozone"))
 
     # SO2
     if "SO2" in selected_values:
@@ -492,7 +430,7 @@ def display_data():
         st.markdown(
             """
             <div style="text-align: justify; font-family: Roboto; font-size: 13px; margin-top: -10px">
-                Sulfur dioxide (SO2) is a colorless gas with a pungent odor that is primarily emitted from the burning of fossil fuels, particularly in power plants and industrial processes that involve the combustion of sulfur-containing fuels such as coal and oil. SO2 can also be released from natural sources such as volcanic eruptions.
+                Sulfur Dioxide (SO2) is a colorless gas with a pungent odor that is primarily emitted from the burning of fossil fuels, particularly in power plants and industrial processes that involve the combustion of sulfur-containing fuels such as coal and oil. SO2 can also be released from natural sources such as volcanic eruptions.
                 Exposure to elevated levels of sulfur dioxide can have adverse health effects. It is a respiratory irritant and can cause symptoms such as coughing, wheezing, shortness of breath, and chest tightness. Individuals with pre-existing respiratory conditions, such as asthma, are particularly susceptible to the effects of SO2. Prolonged or repeated exposure to high concentrations of SO2 can lead to respiratory issues and may worsen existing respiratory conditions.
                 Sulfur dioxide also contributes to the formation of acid rain, which has detrimental effects on ecosystems, including damage to forests, lakes, and aquatic life. When SO2 is released into the atmosphere, it can react with water, oxygen, and other chemicals to form sulfuric acid, which falls back to the Earth's surface as acid rain.
                 To mitigate the impact of sulfur dioxide on air quality and human health, various measures can be implemented. These include the use of cleaner fuels with lower sulfur content, such as low-sulfur coal and alternative energy sources. Installing and upgrading emission control technologies in industrial facilities and power plants can also help reduce SO2 emissions. Additionally, regulatory standards and monitoring systems are important for ensuring compliance and maintaining air quality standards.
@@ -506,9 +444,7 @@ def display_data():
 
         # Scorecard
 
-        location_average = np.mean(dates_and_mean_values_product(longitude, latitude, "L2__SO2___")[1])
-        location_average_f = "{:.3f}".format(location_average)
-        city = st.session_state.selected_city
+        mean, values, dates = kpis(latitude,longitude,"L2__SO2___")
         
         a1.write("")
         a1.markdown(
@@ -517,25 +453,13 @@ def display_data():
                 <h2 style='text-align: center; font-size: 25px;'>SO2 value for {}</h2>
                 <p style='text-align: center; font-size: 60px;'>{}</p>
             </div>
-            """.format(city, location_average_f),
+            """.format(city, mean),
             unsafe_allow_html=True)
 
         # Graph
 
-        dates, mean_value = dates_and_mean_values_product(longitude, latitude, "L2__SO2___")
-
-        fig, ax = plt.subplots()
-        fig.set_size_inches(15, 4)
-        ax.plot(dates, mean_value, label="Trento")
-        ax.set_xlabel("Date")
-        ax.set_ylabel("Sulfur dioxide")
-        date_format = mdates.DateFormatter('%m-%d')
-        ax.xaxis.set_major_formatter(date_format)
-        ax.xaxis.set_major_locator(mdates.DayLocator())
-        #ax.set_ylim(ww_min_by_product("L2__CH4___"), ww_max_by_product("L2__CH4___"))
-        plt.xticks(rotation=45)
         a2.write("")
-        a2.pyplot(fig)
+        a2.pyplot(graph_setup(dates, values, city, "Sulfur Dioxide"))
 
 # Main function
 def main():
