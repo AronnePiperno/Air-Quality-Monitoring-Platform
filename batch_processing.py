@@ -19,6 +19,7 @@ def main():
     output_dir = './data'
     db_path = './db'
 
+
     for pro in products:
         result = search(
             begin_ts=begin,
