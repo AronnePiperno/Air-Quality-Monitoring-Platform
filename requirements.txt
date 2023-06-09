@@ -1,0 +1,13 @@
+fastapi
+glob2
+sentinel5dl
+xarray
+dask[complete]
+zarr
+geopy
+streamlit
+Pillow
+datetime
+uvicorn
+netcdf4
+h5netcdf
