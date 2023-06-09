@@ -11,5 +11,7 @@ db.to_zarr(os.path.join(db_path, 'L2__HCHO__'), mode='w', consolidated=True)
 
 delete_files = glob.glob(resized_path + '/*.nc')
 
+
+
 for file in delete_files:
     os.remove(file)
