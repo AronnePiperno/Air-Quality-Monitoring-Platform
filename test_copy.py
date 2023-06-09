@@ -193,7 +193,7 @@ def display_data():
 
         # O3
 
-        mean = kpis(latitude,longitude,"L2__O3___")
+        mean = kpis(latitude,longitude,"L2__O3____")
         b1.write("")
         b1.markdown(
             """
@@ -406,7 +406,7 @@ def display_data():
 
         # Scorecard
 
-        mean, values, dates = kpis(latitude,longitude,"L2__O3___")
+        mean, values, dates = kpis(latitude,longitude,"L2__O3____")
         
         a1.write("")
         a1.markdown(
