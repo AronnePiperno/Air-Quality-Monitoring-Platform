@@ -15,51 +15,43 @@ def multi_download(output_dir: str, result: dict) -> None:
             result.get('products')
         ))
 
+
 def resize_db(path_in: str, path_out: str) -> None:
     while True:
-        time.sleep(10)
+        time.sleep(20)
         print("resizing db")
-        """try:
+        current_file = ''
+        try:
 
             if len(glob.glob(path_in + '/*.nc')) == 0 and len(glob.glob(path_in + '/*.tmp')) == 0:
                 print("exit resizing db")
                 break
 
             files = glob.glob(path_in + '/*.nc')
-
             for file in files:
+                current_file = file
                 file_name = file.split('/')[-1]
                 ds = xr.open_dataset(file, group='PRODUCT')
-                #ds.to_netcdf(path_out + '/' + file_name, mode='w', encoding={'time_utc': {'dtype': 'S1'}})
-                ds.to_netcdf(path_out + '/' + file_name, mode='w')
+                ds.to_netcdf(path_out + '/' + file_name, mode='w', format="NETCDF4",
+                             encoding={'time_utc': {'dtype': 'S1'}})
                 os.remove(file)
         except:
             print("Error resizing db")
-            continue"""
-        if len(glob.glob(path_in + '/*.nc')) == 0 and len(glob.glob(path_in + '/*.tmp')) == 0:
-            print("exit resizing db")
-            break
+            print('Current file', current_file)
+            continue
 
-        files = glob.glob(path_in + '/*.nc')
-
-        for file in files:
-            file_name = file.split('/')[-1]
-            ds = xr.open_dataset(file, group='PRODUCT')
-            ds.to_netcdf(path_out + '/' + file_name, mode='w', format="NETCDF4", encoding={'time_utc': {'dtype': 'S1'}})
-            #ds.to_netcdf(path_out + '/' + file_name, mode='w', fill_value=0)
-            os.remove(file)
 
 def main():
-    c = Client(n_workers=os.cpu_count()-2, threads_per_worker=1)
-    products = ['L2__CH4___',
-                'L2__CO____',
-                'L2__HCHO__',
+    c = Client(n_workers=3, threads_per_worker=3)
+    products = [#'L2__CH4___',
+                #'L2__CO____',
+                #'L2__HCHO__',
                 'L2__NO2___',
                 'L2__O3____',
                 'L2__SO2___'
                 ]
-    begin = '2022-03-14T00:00:00.000Z'
-    end = '2022-03-16T23:59:59.999Z'
+    begin = '2023-05-15T00:00:00.000Z'
+    end = '2023-05-31T23:59:59.999Z'
     output_dir = './data'
     db_path = './db'
     resized_path = './resized'
@@ -82,36 +74,13 @@ def main():
         t1.join()
         t2.join()
 
-
         db = xr.open_mfdataset(resized_path + '/*.nc', combine='nested', concat_dim='time')
-        db.to_zarr(os.path.join(db_path, pro+"TEST"), mode='w', consolidated=True)
+        db.to_zarr(os.path.join(db_path, pro), mode='w', consolidated=True)
 
         delete_files = glob.glob(resized_path + '/*.nc')
 
         for file in delete_files:
             os.remove(file)
-
-        """
-        files = glob.glob(resized_path + '/*.nc')
-
-        to_database(first=True, file=files[0], db_path=db_path, product=pro+"TEST")
-
-        for file in files:
-            if file == files[0]:
-                continue
-            to_database(first=False, file=file, db_path=db_path, product=pro+"TEST")
-"""
-
-def to_database(first: bool, file: str, db_path: str, product: str) -> None:
-    timestep_db = xr.open_dataset(file, group='PRODUCT')
-    if first:
-        timestep_db.to_zarr(os.path.join(db_path, product), mode='w', consolidated=True)
-    else:
-        db = xr.open_zarr(os.path.join(db_path, product))
-        shutil.rmtree(os.path.join(db_path, product))
-        x1 = xr.combine_by_coords([db, timestep_db])
-        x1.to_zarr(os.path.join(db_path, product), mode='w', consolidated=True)
-    os.remove(file)
 
 
 if __name__ == '__main__':
