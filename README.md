@@ -13,12 +13,12 @@ Display data in a user-friendly Streamlit dashboard
 Support API calls to access the data
 
 ## Files
-- historical_data.py: Contains API calls to retrieve historical data from Sentinel5P and store it in the Zarr DB.
-- batch_processing.py: Sets up batch processing to add the latest data to the Zarr DB.
-- data_retrieval.py: Utilizes Dask to facilitate data searching within the DB.
-- dashboard.py: Sets up the Streamlit dashboard using the Streamlit library and functions from data_retrieval.py.
-- requirements.txt: Contains all the required libraries for running the platform, useful for Docker setups.
-- main.py: Entry point to run the platform.
+- `historical_data.py`: Contains API calls to retrieve historical data from Sentinel5P and store it in the Zarr DB.
+- `batch_processing.py`: Sets up batch processing to add the latest data to the Zarr DB.
+- `data_retrieval.py`: Utilizes Dask to facilitate data searching within the DB.
+- `dashboard.py`: Sets up the Streamlit dashboard using the Streamlit library and functions from data_retrieval.py.
+- `requirements.txt`: Contains all the required libraries for running the platform, useful for Docker setups.
+- `main.py`: Entry point to run the platform.
 
 ## Usage
 1. Install the required libraries by running:
@@ -27,33 +27,42 @@ Support API calls to access the data
    pip install -r requirements.txt
    ```
 
-2. Run the historical_data.py script to retrieve historical data and populate the Zarr DB.
+2. Run the `historical_data.py` script to retrieve historical data and populate the Zarr DB.
 
+```python
 python historical_data.py
+   ```
 
-3. Set up batch processing using the batch_processing.py script to keep the Zarr DB up to date with the latest data.
+3. Set up batch processing using the `batch_processing.py` script to keep the Zarr DB up to date with the latest data.
 
+```python
 python batch_processing.py
+   ```
 
-4. Utilize the data_retrieval.py script to search and retrieve data from the Zarr DB using Dask.
+4. Utilize the `data_retrieval.py` script to search and retrieve data from the Zarr DB using Dask.
 
+```python
 python data_retrieval.py
+   ```
 
-5. Run the dashboard.py script to start the Streamlit dashboard and visualize the air quality data.
+5. Run the `dashboard.py` script to start the Streamlit dashboard and visualize the air quality data.
 
+```python
 streamlit run dashboard.py
+   ```
 
 6. Use the provided API calls to access the data programmatically.
 
 ## Example API Calls
 To retrieve air quality data for a specific location and time range, make a GET request to the following endpoint:
 
-bash
+```python
 GET /api/data?location={location}&start_date={start_date}&end_date={end_date}
+```
 
-- location: The geographical location to retrieve the data for.
-- start_date: The start date of the time range to retrieve data from.
-- end_date: The end date of the time range to retrieve data from.
+- **location**: The geographical location to retrieve the data for.
+- **start_date**: The start date of the time range to retrieve data from.
+- **end_date**: The end date of the time range to retrieve data from.
 
 The response will be in JSON format and contain the requested air quality data.
 
