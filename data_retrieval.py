@@ -5,6 +5,7 @@ import os
 import zarr
 from datetime import datetime
 import numpy as np
+import xarray as xr
 def by_qa_value():
     pass
 
@@ -20,7 +21,7 @@ def mean_by_date(values, dates):
     return mean_values, unique_dates
 
 def by_coordinate(latitude, longitude, product, precision = 0.5):
-
+    since = datetime.now()
     client = Client(n_workers=3, threads_per_worker=3, memory_limit='10GB')
     dask.config.set({'array.slicing.split_large_chunks': False})
     client.amm.start()
@@ -46,23 +47,11 @@ def by_coordinate(latitude, longitude, product, precision = 0.5):
             raise ValueError('Product not supported')
 
     pollutant = da.from_zarr(os.path.join('./db', product + '.zarr'), component=column, chunks='auto')
-    """
-    index = np.where(
-        (latitude_arr[500:] >= latitude - precision) &
-        (latitude_arr[500:] <= latitude + precision) &
-        (longitude_arr[500:] >= longitude - precision) &
-        (longitude_arr[500:] <= longitude + precision) &
-        (qa_value[500:] > 0.5) &
-        (pollutant[500:] < 100000)
-    )
-    """
-    store = zarr.open(os.path.join("./db", product+'.zarr'), mode="r")
-    print(store['longitude'].shape)
-    print(store['latitude'].shape)
-    print(store['qa_value'].shape)
-    print(store[column].shape)
 
-    shape = store['longitude'].shape[0]
+    store = xr.open_zarr(os.path.join("./db", product+'.zarr'), chunks='auto')
+    print(store)
+    store = store.sel(layer=0, corner=2, method='nearest')
+
     index = da.where(
         da.logical_and(store['longitude'][:] >= longitude - precision, store['longitude'][:] <= longitude + precision) &
         da.logical_and(store['latitude'][:] >= latitude - precision, store['latitude'][:] <= latitude + precision) &
@@ -72,22 +61,12 @@ def by_coordinate(latitude, longitude, product, precision = 0.5):
 
     db = zarr.open(os.path.join('./db', product + '.zarr'))
 
-    print('---------------------------------')
-    print(index)
-    print('---------------------------------')
-
     dates = db['time'][index[0][0]]
     dates = [datetime.fromtimestamp(date).replace(year=2023).date() for date in dates]
 
-    print('---------------------------------')
-    print(db[column][index[0]])
-    print(dates)
-    print('---------------------------------')
-
-    dict = {'dates':dates}
-
     mean_values, unique_dates = mean_by_date(np.array(db[column][index[0]]), np.array(dates))
-
+    to = datetime.now()
+    print('Time elapsed', to - since)
     return mean_values, unique_dates
 
 

@@ -7,7 +7,7 @@ import numpy as np
 from geopy.geocoders import Nominatim
 from test_db import *
 import data_retrieval
-
+import base64
 st.set_page_config(layout="wide")
 
 def kpis(latitude, longitude, product):
@@ -56,7 +56,14 @@ def display_data():
 
     # FIRST ROW
     a1, a2, a3 = st.columns([1,3,1])
+    a1.write("")
+    a1.write("")
+    a1.write("")
     a1.image(Image.open('esa-logo-color.png'), use_column_width=True)
+    a2.write("")
+    a2.write("")
+    a2.write("")
+    a2.write("")
     a2.write("")
     a2.markdown(
         """
@@ -73,7 +80,7 @@ def display_data():
         """,
         unsafe_allow_html=True
     )
-    a3.image(Image.open('esa-logo-color.png'), use_column_width=True)
+    a3.image('./aqi.gif')
 
     # City Info
     geolocator = Nominatim(user_agent="MyApp")
@@ -428,7 +435,7 @@ def display_data():
     # SO2
     if "SO2" in selected_values:
 
-        a1, a2 = st.columns([12,3])
+        a1, a2, a3 = st.columns([12,1,3])
 
         # Description
 
@@ -451,8 +458,8 @@ def display_data():
 
         mean, values, dates = kpis(latitude,longitude,"L2__SO2___")
         
-        a2.write("")
-        a2.markdown(
+        a3.write("")
+        a3.markdown(
             """
             <div style='display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 20px; border-radius: 10px; border: 1px solid black; margin-top: 40px;'>
                 <h2 style='text-align: center; font-size: 25px;'>SO2 value for {}</h2>

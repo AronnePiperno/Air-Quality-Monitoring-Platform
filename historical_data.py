@@ -43,9 +43,9 @@ def resize_db(path_in: str, path_out: str) -> None:
 
 def main():
     c = Client(n_workers=3, threads_per_worker=3)
-    products = [#'L2__CH4___',
-                #'L2__CO____',
-                #'L2__HCHO__',
+    products = ['L2__CH4___',
+                'L2__CO____',
+                'L2__HCHO__',
                 'L2__NO2___',
                 'L2__O3____',
                 'L2__SO2___'
@@ -75,6 +75,7 @@ def main():
         t2.join()
 
         db = xr.open_mfdataset(resized_path + '/*.nc', combine='nested', concat_dim='time')
+
         db.to_zarr(os.path.join(db_path, pro), mode='w', consolidated=True)
 
         delete_files = glob.glob(resized_path + '/*.nc')
