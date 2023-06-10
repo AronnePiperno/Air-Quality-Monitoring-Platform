@@ -17,6 +17,7 @@ def multi_download(output_dir: str, result: dict) -> None:
 
 
 def resize_db(path_in: str, path_out: str) -> None:
+
     while True:
         time.sleep(20)
         print("resizing db")
