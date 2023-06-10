@@ -1,4 +1,4 @@
-###Air Quality Monitoring Platform
+Title: Air Quality Monitoring Platform
 ##Introduction
 This is an air quality monitoring platform that leverages the Sentinel5P satellite and its API system. The platform allows users to retrieve historical air quality data, store it in a Zarr DB (a popular geospatial database), and implement batch processing to obtain the latest data. The platform utilizes Dask for efficient data retrieval and presents the results in a Streamlit dashboard. Additionally, the platform supports API calls to access the data.
 
