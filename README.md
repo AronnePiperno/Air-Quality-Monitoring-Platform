@@ -1,4 +1,4 @@
-### Air Quality Monitoring Platform
+# Air Quality Monitoring Platform
 
 ## Introduction
 
