@@ -39,19 +39,13 @@ python historical_data.py
 python batch_processing.py
    ```
 
-4. Utilize the `data_retrieval.py` script to search and retrieve data from the Zarr DB using Dask.
-
-```python
-python data_retrieval.py
-   ```
-
-5. Run the `dashboard.py` script to start the Streamlit dashboard and visualize the air quality data.
+4. Run the `dashboard.py` script to start the Streamlit dashboard and visualize the air quality data. Inside it you could find some functions from `data_retrieval.py`
 
 ```python
 streamlit run dashboard.py
    ```
 
-6. Use the provided API calls to access the data programmatically.
+5. Use the provided API calls to access the data programmatically.
 
 ## Example API Calls
 To retrieve air quality data for a specific location and time range, make a GET request to the following endpoint:
