@@ -1,28 +1,55 @@
-# Air-Quality-Monitoring-Platform
+Air Quality Monitoring Platform
+Introduction
+This is an air quality monitoring platform that leverages the Sentinel5P satellite and its API system. The platform allows users to retrieve historical air quality data, store it in a Zarr DB (a popular geospatial database), and implement batch processing to obtain the latest data. The platform utilizes Dask for efficient data retrieval and presents the results in a Streamlit dashboard. Additionally, the platform supports API calls to access the data.
 
-![image](https://user-images.githubusercontent.com/96500221/236255712-95410790-69b8-46d6-a356-9169c6b8213c.png)
+Features
+Retrieve historical air quality data from Sentinel5P API
+Store data in a Zarr DB
+Implement batch processing for updating the latest data
+Efficient data retrieval using Dask
+Display data in a user-friendly Streamlit dashboard
+Support API calls to access the data
+Files
+historical_data.py: Contains API calls to retrieve historical data from Sentinel5P and store it in the Zarr DB.
+batch_processing.py: Sets up batch processing to add the latest data to the Zarr DB.
+data_retrieval.py: Utilizes Dask to facilitate data searching within the DB.
+dashboard.py: Sets up the Streamlit dashboard using the Streamlit library and functions from data_retrieval.py.
+requirements.txt: Contains all the required libraries for running the platform, useful for Docker setups.
+main.py: Entry point to run the platform.
+Usage
+Install the required libraries by running:
+Copy code
+pip install -r requirements.txt
+Run the historical_data.py script to retrieve historical data and populate the Zarr DB.
+Copy code
+python historical_data.py
+Set up batch processing using the batch_processing.py script to keep the Zarr DB up to date with the latest data.
+Copy code
+python batch_processing.py
+Utilize the data_retrieval.py script to search and retrieve data from the Zarr DB using Dask.
+Copy code
+python data_retrieval.py
+Run the dashboard.py script to start the Streamlit dashboard and visualize the air quality data.
+arduino
+Copy code
+streamlit run dashboard.py
+Use the provided API calls to access the data programmatically.
+Example API Calls
+To retrieve air quality data for a specific location and time range, make a GET request to the following endpoint:
 
+bash
+Copy code
+GET /api/data?location={location}&start_date={start_date}&end_date={end_date}
+location: The geographical location to retrieve the data for.
+start_date: The start date of the time range to retrieve data from.
+end_date: The end date of the time range to retrieve data from.
+The response will be in JSON format and contain the requested air quality data.
 
-1. Data retrieval and storage: The first step is to retrieve the Sentinel-5P satellite data and store it in a suitable database. The data can be retrieved using the Copernicus Open Access Hub or the Google Earth Engine API. The data can be stored in a cloud-based database such as Amazon S3, Google Cloud Storage, or Azure Blob Storage. It is important to ensure that the database can handle large volumes of data and can scale to meet future requirements.
+Contributing
+Contributions to this project are welcome. If you encounter any issues or have suggestions for improvement, please open an issue or submit a pull request on the project's GitHub repository.
 
-2. Data pre-processing: Before the data can be used for modelling, it needs to be pre-processed to remove any noise and anomalies. This can involve applying filters, normalising the data, and correcting for any atmospheric effects. It is important to validate the data and ensure that it is accurate and reliable.
+🌍🔍📊📈📉🌡️🌬️📡📅
 
-3. Data modelling: Once the data has been pre-processed, it can be used for modelling. Machine learning algorithms can be used to predict air quality based on historical data and other factors such as weather conditions, traffic patterns, and industrial activities. It is important to evaluate the performance of the models and fine-tune them as necessary.
+Thank you for using our air quality monitoring platform! We hope you find it helpful in tracking and analyzing air quality data. If you have any questions or need assistance, please don't hesitate to contact us.
 
-4. Batch processing: Given the large volume of data, batch processing can be used to process the data in parallel. This can involve using Apache Spark, Hadoop, or other distributed computing frameworks. It is important to ensure that the batch processing is efficient and can handle large volumes of data.
-
-5. Data visualisation: Finally, the data can be visualised using suitable data visualisation tools such as Tableau, Power BI, or D3.js. The visualisations can be made available online so that citizens can make informed decisions regarding their respiratory health. It is important to ensure that the visualisations are intuitive and easy to understand.
-
-6. Data management system: To manage the data pipeline and ensure its efficient operation, it is important to use a suitable data management system such as Apache Airflow, Luigi or Apache NiFi. These systems can be used to schedule and orchestrate the various stages of the pipeline, monitor its performance and ensure its reliability and scalability.
-
-
-
-![Group 1](https://user-images.githubusercontent.com/127101611/236421144-531d173c-d87a-490f-aafe-034ef11c0640.png)
-
-## Data Pipeline
-
-![image](https://user-images.githubusercontent.com/96500221/236688855-01757c5f-44fd-4025-92ff-5aa5d8cd20db.png)
-
-
-
-
+Happy monitoring! 🌍🌤️
