@@ -56,7 +56,7 @@ streamlit run dashboard.py
 ## Example API Calls
 To retrieve air quality data for a specific location and time range, make a GET request to the following endpoint:
 
-```python
+```console
 GET /api/data?location={location}&start_date={start_date}&end_date={end_date}
 ```
 
