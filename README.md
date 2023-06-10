@@ -25,6 +25,7 @@ Support API calls to access the data
 
 '''python
 pip install -r requirements.txt
+'''
 
 2. Run the historical_data.py script to retrieve historical data and populate the Zarr DB.
 
