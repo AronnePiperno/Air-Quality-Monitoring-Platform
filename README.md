@@ -27,6 +27,13 @@ Support API calls to access the data
 pip install -r requirements.txt
 '''
 
+```python
+def hello_world():
+    print("Hello, World!")
+
+hello_world()
+
+
 2. Run the historical_data.py script to retrieve historical data and populate the Zarr DB.
 
 python historical_data.py
