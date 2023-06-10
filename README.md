@@ -1,22 +1,24 @@
-Air Quality Monitoring Platform
-Introduction
+###Air Quality Monitoring Platform
+##Introduction
 This is an air quality monitoring platform that leverages the Sentinel5P satellite and its API system. The platform allows users to retrieve historical air quality data, store it in a Zarr DB (a popular geospatial database), and implement batch processing to obtain the latest data. The platform utilizes Dask for efficient data retrieval and presents the results in a Streamlit dashboard. Additionally, the platform supports API calls to access the data.
 
-Features
+##Features
 Retrieve historical air quality data from Sentinel5P API
 Store data in a Zarr DB
 Implement batch processing for updating the latest data
 Efficient data retrieval using Dask
 Display data in a user-friendly Streamlit dashboard
 Support API calls to access the data
-Files
+
+##Files
 historical_data.py: Contains API calls to retrieve historical data from Sentinel5P and store it in the Zarr DB.
 batch_processing.py: Sets up batch processing to add the latest data to the Zarr DB.
 data_retrieval.py: Utilizes Dask to facilitate data searching within the DB.
 dashboard.py: Sets up the Streamlit dashboard using the Streamlit library and functions from data_retrieval.py.
 requirements.txt: Contains all the required libraries for running the platform, useful for Docker setups.
 main.py: Entry point to run the platform.
-Usage
+
+##Usage
 Install the required libraries by running:
 Copy code
 pip install -r requirements.txt
