@@ -61,7 +61,7 @@ def display_data():
     st.markdown(hide_streamlit_style, unsafe_allow_html=True)
 
     # Add background image
-    add_bg_from_local("images\Wildfire_crop.jpg")
+    add_bg_from_local("images/Wildfire_crop.jpg")
 
     # TITLE
     st.markdown("<h1 style='color:#00000; font-size: 40px; font-family: Lato, sans-serif;'>Air Quality Monitoring Platform</h1>", unsafe_allow_html=True)
@@ -91,13 +91,13 @@ def display_data():
     markdown_text = f'<div style="text-align: center;"><img src="data:image/jpg;base64,{encoded_image}" alt="Image" style="width: 200px;"></div>'
     a1.markdown(markdown_text, unsafe_allow_html=True)
 
-    with open('images\Sigillo_Università_di_Trento.svg.png', "rb") as f:
+    with open('images/Sigillo_Università_di_Trento.svg.png', "rb") as f:
         image_data = f.read()
     encoded_image = base64.b64encode(image_data).decode()
     markdown_text = f'<div style="text-align: center;"><img src="data:image/jpg;base64,{encoded_image}" alt="Image" style="width: 120px;"></div>'
     a2.markdown(markdown_text, unsafe_allow_html=True)
 
-    with open('images\Copernicus_fb.png', "rb") as f:
+    with open('images/Copernicus_fb.png', "rb") as f:
         image_data = f.read()
     encoded_image = base64.b64encode(image_data).decode()
     markdown_text = f'<div style="text-align: center;"><img src="data:image/jpg;base64,{encoded_image}" alt="Image" style="width: 200px;"></div>'
