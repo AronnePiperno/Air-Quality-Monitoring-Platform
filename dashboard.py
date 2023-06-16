@@ -1,86 +1,136 @@
 import streamlit as st
+import pandas as pd
 import numpy as np
+import plost
+from dashboard_func import *
 from PIL import Image
-import matplotlib.pyplot as plt
-import matplotlib.dates as mdates
-import numpy as np
 from geopy.geocoders import Nominatim
-from test_db import *
-import data_retrieval
-import base64
-st.set_page_config(layout="wide")
 
-def kpis(latitude, longitude, product):
-    values, dates = data_retrieval.by_coordinate(latitude, longitude, product)
-    location_average = np.mean(values)
-    location_average_f = "{:.6f}".format(location_average)
-    return location_average_f, values, dates
 
-def graph_setup (dates, values, city, pollutant):
-    fig, ax = plt.subplots()
-    fig.set_size_inches(15, 4)
-    ax.plot(dates, values, label=city)
-    ax.set_xlabel("Date")
-    ax.set_ylabel(pollutant)
-    date_format = mdates.DateFormatter('%m-%d')
-    ax.xaxis.set_major_formatter(date_format)
-    ax.xaxis.set_major_locator(mdates.DayLocator())
-    plt.xticks(rotation=45)
-    return fig
+# Page setting
+st.set_page_config(layout="wide",
+                   page_title="Air Quality Monitoring",
+                   page_icon= "./images/esa-logo-color.png",
+                   initial_sidebar_state="collapsed",
+                   )
 
+# Page 1
 def city_selection():
-    # Add custom CSS for the background image
+
+    # Hide Button
+    hide_streamlit_style = """
+    <style>
+    #MainMenu {visibility: hidden;}
+    footer {visibility: hidden;}
+    </style>
+    """
+    st.markdown(hide_streamlit_style, unsafe_allow_html=True)
+
+    # Add background image
+    add_bg_from_local("images/08wildfires-blog-aqi-500-vqhb-videoSixteenByNine3000.jpg")
+
+    # Set up
     st.title("City Selection")
     city = st.text_input("Enter a city name:")
-    
-    if st.button("Submit"):
+
+    if st.form(key='city_form'):
         # Validate city input
         if city.strip():
             geolocator = Nominatim(user_agent="your_app_name")
-            location = geolocator.geocode(city)            
+            location = geolocator.geocode(city)
             if location is None:
                 st.error("I'm sorry, I could not find this city!")
             else:
                 st.session_state.selected_city = city
+                st.session_state.city_selected = True  # Set flag to indicate city selection
                 st.experimental_rerun()
 
-# Data display page
+# Page 2
+
 def display_data():
     # Fetch and display data for the selected city
     # You can customize this part to fetch and display the relevant data
 
-    # TITLE
-    st.markdown("<h1 style='font-size: 40px; font-family: Roboto, sans-serif;'>Air Quality Monitoring Platform</h1>", unsafe_allow_html=True)
-    st.markdown("<h1 style='font-size: 15px; font-family: Arial, sans-serif; font-style: italic; margin-top: -30px'>Alessandro de Ferrari, Tommaso Ferretti</h1>", unsafe_allow_html=True)
+    # Hide Button
+    hide_streamlit_style = """
+    <style>
+    #MainMenu {visibility: hidden;}
+    footer {visibility: hidden;}
+    </style>
+    """
+    st.markdown(hide_streamlit_style, unsafe_allow_html=True)
 
+    # Add background image
+    add_bg_from_local("images\Wildfire_crop.jpg")
+
+    # TITLE
+    st.markdown("<h1 style='color:#00000; font-size: 40px; font-family: Lato, sans-serif;'>Air Quality Monitoring Platform</h1>", unsafe_allow_html=True)
+    st.markdown("<h1 style='color:#00000; font-size: 15px; font-family: Arial, sans-serif; font-style: italic; margin-top: -30px'>Alessandro de Ferrari, Tommaso Ferretti</h1>", unsafe_allow_html=True)
+
+    if 'city_selected' not in st.session_state:
+        city_selection()  # If city not selected, show city selection page
+    else:
+        # Fetch and display data for the selected city
+        # You can customize this part to fetch and display the relevant data
+
+        # Your code for displaying data goes here
+
+        # Restart button
+        if st.button("Restart"):
+            location = None
+            del st.session_state.city_selected  # Remove the flag to reset city selection
+            city_selection()
 
     # FIRST ROW
-    a1, a2, a3 = st.columns([1,3,1])
-    a1.write("")
-    a1.write("")
-    a1.write("")
-    a1.image(Image.open('esa-logo-color.png'), use_column_width=True)
-    a2.write("")
-    a2.write("")
-    a2.write("")
-    a2.write("")
-    a2.write("")
-    a2.markdown(
-        """
-        <div style="text-align: justify; font-family: Roboto; font-size: 16px;">
-            Stay informed about the air you breathe with our Sentinel-5P Air Quality Dashboard. 
-            Discover real-time data on various pollutants and their impact on the environment. 
-            Gain insights into the quality of the air around you and make informed decisions for a healthier lifestyle.
-            Each pollutant comes with a concise description to help you understand its potential effects.
-            Stay up to date with the latest data and track changes in air quality over time.
-            Take control of your surroundings and contribute to a cleaner and safer environment.
-            With our intuitive dashboard, monitoring air quality has never been easier.
-            Breathe easy, stay informed, and make a positive impact on your well-being and the planet.
-        </div>
-        """,
+
+    a1, a2, a3 = st.columns(3)  # Adjust the width values as per your requirement
+
+    with open("./images/esa-logo-color.png", "rb") as f:
+        image_data = f.read()
+    encoded_image = base64.b64encode(image_data).decode()
+    markdown_text = f'<div style="text-align: center;"><img src="data:image/jpg;base64,{encoded_image}" alt="Image" style="width: 200px;"></div>'
+    a1.markdown(markdown_text, unsafe_allow_html=True)
+
+    with open('images\Sigillo_Università_di_Trento.svg.png', "rb") as f:
+        image_data = f.read()
+    encoded_image = base64.b64encode(image_data).decode()
+    markdown_text = f'<div style="text-align: center;"><img src="data:image/jpg;base64,{encoded_image}" alt="Image" style="width: 120px;"></div>'
+    a2.markdown(markdown_text, unsafe_allow_html=True)
+
+    with open('images\Copernicus_fb.png', "rb") as f:
+        image_data = f.read()
+    encoded_image = base64.b64encode(image_data).decode()
+    markdown_text = f'<div style="text-align: center;"><img src="data:image/jpg;base64,{encoded_image}" alt="Image" style="width: 200px;"></div>'
+    a3.markdown(markdown_text, unsafe_allow_html=True)
+
+    container_style = '''
+        border: 2px solid black;
+        border-radius: 10px;
+        background-color: #e3d5ca;
+        padding: 20px;
+        margin-bottom: 20px;
+        text-align: justify;
+    '''
+
+    st.write("")
+    st.write("")
+    st.markdown(
+        f'<div style="{container_style}">Stay informed about the air you breathe with our Sentinel-5P Air Quality Dashboard. Discover real-time data on various pollutants and their impact on the environment. Gain insights into the quality of the air around you and make informed decisions for a healthier lifestyle. Each pollutant comes with a concise description to help you understand its potential effects. Stay up to date with the latest data and track changes in air quality over time. Take control of your surroundings and contribute to a cleaner and safer environment. With our intuitive dashboard, monitoring air quality has never been easier. Breathe easy, stay informed, and make a positive impact on your well-being and the planet.</div>',
         unsafe_allow_html=True
     )
-    a3.image('./aqi.gif')
+
+    st.markdown("""<hr style="background-color:#e3d5ca; height: 2px; margin: 1em 0;">""", unsafe_allow_html=True)
+
+
+
+
+
+
+
+
+    # Select the pollutant
+
+    st.markdown("<h3 style='color:#e3d5ca; font-size: 40px; font-family: Lato, sans-serif;'>Pollutant Overview</h1>", unsafe_allow_html=True)
 
     # City Info
     geolocator = Nominatim(user_agent="MyApp")
@@ -90,20 +140,19 @@ def display_data():
 
     city = st.session_state.selected_city
 
-    st.write("<p style='align: center;'><strong>City:</strong></p>", unsafe_allow_html=True)
-    st.write("<p style='align: center; margin-top: -15px;'>" + str(location) + "</p>", unsafe_allow_html=True)
-    st.write("<p style='align: center;'><strong>Latitude:</strong></p>", unsafe_allow_html=True)
-    st.write("<p style='align: center; margin-top: -15px;'>" + str(latitude) + "</p>", unsafe_allow_html=True)
-    st.write("<p style='align: center;'><strong>Longitude:</strong></p>", unsafe_allow_html=True)
-    st.write("<p style='align: center; margin-top: -15px;'>" + str(longitude) + "</p>", unsafe_allow_html=True)
-
+    st.write("<div style='display: flex; justify-content: center;'>", unsafe_allow_html=True)
+    st.write("<div style='text-align: center;'>", unsafe_allow_html=True)
+    st.write("<p style='color:#e3d5ca;'><strong>City:</strong> " + str(location) + "</p>", unsafe_allow_html=True)
+    st.write("<p style='color:#e3d5ca;'><strong>Latitude:</strong> " + str(latitude) + "</p>", unsafe_allow_html=True)
+    st.write("<p style='color:#e3d5ca;'><strong>Longitude:</strong> " + str(longitude) + "</p>", unsafe_allow_html=True)
+    st.write("</div>", unsafe_allow_html=True)
+    st.write("</div>", unsafe_allow_html=True)
 
     # Select the pollutant
     selected_values = st.selectbox("Select the pollutant you are looking for:", ["HCHO", "NO2", "O3", "SO2", "Overall", "CH4", "CO"])
 
     # Overall
     if "Overall" in selected_values:
-        st.title("Pollutant Overview")
 
         a1,a2,a3,a4,a5,a6=st.columns(6)
         a1.markdown("<h2 style='text-align: center;'>CH4</h2>", unsafe_allow_html=True)
