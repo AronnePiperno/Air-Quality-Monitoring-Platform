@@ -39,6 +39,7 @@ def resize_db(path_in: str, path_out: str) -> None:
         except:
             print("Error resizing db")
             print('Current file', current_file)
+            os.remove(current_file)
             continue
 
 
@@ -65,7 +66,8 @@ def main():
             processing_level='L2',
             processing_mode='Offline'
         )
-        print("debug")
+
+        print(f"Download of {pro} started. {len(result.get('products'))} files will be downloaded.")
 
         t1 = threading.Thread(target=multi_download, args=(output_dir, result))
         t2 = threading.Thread(target=resize_db, args=(output_dir, resized_path))
@@ -75,7 +77,7 @@ def main():
         t1.join()
         t2.join()
 
-        db = xr.open_mfdataset(resized_path + '/*.nc', combine='nested', concat_dim='time')
+        db = xr.open_mfdataset(resized_path + '/*.nc', combine='nested', concat_dim='time', drop_variables=['delta_time', 'time_utc'])
 
         db.to_zarr(os.path.join(db_path, pro), mode='w', consolidated=True)
 

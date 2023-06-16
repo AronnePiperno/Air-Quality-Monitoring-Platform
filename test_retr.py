@@ -39,9 +39,6 @@ def main():
         print(store)
 
 if __name__ == "__main__":
-        main()
-        #ds = xr.open_zarr('./db/L2__CH4___testtest', consolidated=True)
-        #print(ds)
-        #ds = ds.dropna(dim="methane_mixing_ratio_bias_corrected", how="all")
-        #print(ds)
-
+        #main()
+        ds = xr.open_zarr('./db/L2__CO____.zarrBATCHTEST', consolidated=True, drop_variables=['delta_time', 'time_utc'])
+        print(ds)
