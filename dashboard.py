@@ -11,7 +11,6 @@ from geopy.geocoders import Nominatim
 st.set_page_config(layout="wide",
                    page_title="Air Quality Monitoring",
                    page_icon= "./images/esa-logo-color.png",
-                   initial_sidebar_state="collapsed",
                    )
 
 # Page 1
@@ -22,15 +21,17 @@ def city_selection():
     <style>
     #MainMenu {visibility: hidden;}
     footer {visibility: hidden;}
+    header {visibility: hidden;}
     </style>
     """
+
     st.markdown(hide_streamlit_style, unsafe_allow_html=True)
 
     # Add background image
     add_bg_from_local("images/08wildfires-blog-aqi-500-vqhb-videoSixteenByNine3000.jpg")
 
     # Set up
-    st.title("City Selection")
+    st.markdown("<h1 style='color:#00000; font-size: 40px; font-family: Helvetica, sans-serif;'>Air Quality Monitoring Platform</h1>", unsafe_allow_html=True)
     city = st.text_input("Enter a city name:")
 
     if st.form(key='city_form'):
@@ -56,30 +57,23 @@ def display_data():
     <style>
     #MainMenu {visibility: hidden;}
     footer {visibility: hidden;}
+    header {visibility: hidden;}
     </style>
     """
     st.markdown(hide_streamlit_style, unsafe_allow_html=True)
 
     # Add background image
-    add_bg_from_local("images/Wildfire_crop.jpg")
+    # add_bg_from_local("images/Wildfire_crop.jpg")
 
     # TITLE
     st.markdown("<h1 style='color:#00000; font-size: 40px; font-family: Lato, sans-serif;'>Air Quality Monitoring Platform</h1>", unsafe_allow_html=True)
     st.markdown("<h1 style='color:#00000; font-size: 15px; font-family: Arial, sans-serif; font-style: italic; margin-top: -30px'>Alessandro de Ferrari, Tommaso Ferretti</h1>", unsafe_allow_html=True)
 
-    if 'city_selected' not in st.session_state:
-        city_selection()  # If city not selected, show city selection page
-    else:
-        # Fetch and display data for the selected city
-        # You can customize this part to fetch and display the relevant data
-
-        # Your code for displaying data goes here
-
-        # Restart button
-        if st.button("Restart"):
-            location = None
-            del st.session_state.city_selected  # Remove the flag to reset city selection
-            city_selection()
+    if st.button("Restart"):
+            city = None
+            st.session_state.selected_city = None
+            st.session_state.city_selected = False  # Remove the flag to reset city selection
+            st.experimental_rerun()
 
     # FIRST ROW
 
@@ -104,12 +98,12 @@ def display_data():
     a3.markdown(markdown_text, unsafe_allow_html=True)
 
     container_style = '''
-        border: 2px solid black;
         border-radius: 10px;
-        background-color: #e3d5ca;
+        background-color: #f5f3f4;
         padding: 20px;
         margin-bottom: 20px;
         text-align: justify;
+        color: #000000;
     '''
 
     st.write("")
@@ -119,7 +113,7 @@ def display_data():
         unsafe_allow_html=True
     )
 
-    st.markdown("""<hr style="background-color:#e3d5ca; height: 2px; margin: 1em 0;">""", unsafe_allow_html=True)
+    #st.markdown("""<hr style="background-color:#e3d5ca; height: 2px; margin: 1em 0;">""", unsafe_allow_html=True)
 
 
 
@@ -130,7 +124,7 @@ def display_data():
 
     # Select the pollutant
 
-    st.markdown("<h3 style='color:#e3d5ca; font-size: 40px; font-family: Lato, sans-serif;'>Pollutant Overview</h1>", unsafe_allow_html=True)
+    st.write("")
 
     # City Info
     geolocator = Nominatim(user_agent="MyApp")
@@ -142,9 +136,9 @@ def display_data():
 
     st.write("<div style='display: flex; justify-content: center;'>", unsafe_allow_html=True)
     st.write("<div style='text-align: center;'>", unsafe_allow_html=True)
-    st.write("<p style='color:#e3d5ca;'><strong>City:</strong> " + str(location) + "</p>", unsafe_allow_html=True)
-    st.write("<p style='color:#e3d5ca;'><strong>Latitude:</strong> " + str(latitude) + "</p>", unsafe_allow_html=True)
-    st.write("<p style='color:#e3d5ca;'><strong>Longitude:</strong> " + str(longitude) + "</p>", unsafe_allow_html=True)
+    st.write("<p style='color:#00000;'><strong>City:</strong> " + str(location) + "</p>", unsafe_allow_html=True)
+    st.write("<p style='color:#00000;'><strong>Latitude:</strong> " + str(latitude) + "</p>", unsafe_allow_html=True)
+    st.write("<p style='color:#00000;'><strong>Longitude:</strong> " + str(longitude) + "</p>", unsafe_allow_html=True)
     st.write("</div>", unsafe_allow_html=True)
     st.write("</div>", unsafe_allow_html=True)
 
@@ -275,45 +269,81 @@ def display_data():
 
  
         
+
+
+
+
+
+
+
+
+
+
     # CH4
     if "CH4" in selected_values:
 
-        a1, a2 = st.columns([12,3])
-
-        # Description
-
-        st.write("")
-        a1.markdown("<h1 style='font-size: 30px; font-family: Roboto, sans-serif;'>Methane (CH4)</h1>", unsafe_allow_html=True)
-        a1.markdown(
-            """
-            <div style="text-align: justify; font-family: Roboto; font-size: 13px; margin-top: -10px">
-                Methane (CH4) is a greenhouse gas and a significant component of air pollution. It is primarily emitted from natural sources such as wetlands, as well as human activities including agriculture, fossil fuel extraction, and waste management. Methane is a potent greenhouse gas, meaning it has a high global warming potential and contributes to climate change.
-                Exposure to elevated levels of methane can have environmental and health consequences. Methane itself is not directly harmful to human health. However, its presence in the atmosphere contributes to the greenhouse effect, leading to global warming and climate change. These changes in temperature and weather patterns can have wide-ranging impacts on ecosystems, agriculture, and human societies.
-                Efforts to reduce methane emissions are crucial in mitigating climate change. Methane emissions can be reduced by implementing various strategies, such as improving waste management practices, reducing emissions from fossil fuel production and distribution, and implementing agricultural techniques that minimize methane release from livestock and rice cultivation.
-                Regulatory agencies and international agreements play a vital role in setting targets and standards for methane emissions reduction. For example, the Paris Agreement aims to limit global warming well below 2 degrees Celsius compared to pre-industrial levels, and countries have made commitments to reduce their greenhouse gas emissions, including methane.
-                In conclusion, methane (L2CH4) is a potent greenhouse gas that contributes to climate change. While it is not directly harmful to human health, its presence in the atmosphere has far-reaching environmental impacts. Controlling methane emissions through various strategies is essential for mitigating climate change and protecting the planet's ecosystems and societies.
-            </div>
-            """,
-            unsafe_allow_html=True)
-
-        # Scorecard
-
         mean, values, dates = kpis(latitude,longitude,"L2__CH4___")
+
+        if len(values)==0:
+            st.write("")
+            st.write("<div style='display: flex; justify-content: center; align-items: center; height: 100vh; text-align: center;'>", unsafe_allow_html=True)
+            st.write("<h3>No data available for this pollutant</h3>")
+            st.write("</div>", unsafe_allow_html=True)
         
-        a2.write("")
-        a2.markdown(
-            """
-            <div style='display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 20px; border-radius: 10px; border: 1px solid black; margin-top: 40px;'>
-                <h2 style='text-align: center; font-size: 25px;'>CH4 value for {}</h2>
-                <p style='text-align: center; font-size: 60px;'>{}</p>
-            </div>
-            """.format(city, mean),
-            unsafe_allow_html=True)
+        else:
+            st.write("")
+            st.markdown("<h1 style='font-size: 30px; font-family: Roboto, sans-serif;'>Methane (CH4)</h1>", unsafe_allow_html=True)
+            st.markdown(
+                """
+                <div style="text-align: justify; font-family: Roboto; font-size: 13px; margin-top: -10px">
+                    Methane (CH4) is a greenhouse gas and a significant component of air pollution. It is primarily emitted from natural sources such as wetlands, as well as human activities including agriculture, fossil fuel extraction, and waste management. Methane is a potent greenhouse gas, meaning it has a high global warming potential and contributes to climate change.
+                    Exposure to elevated levels of methane can have environmental and health consequences. Methane itself is not directly harmful to human health. However, its presence in the atmosphere contributes to the greenhouse effect, leading to global warming and climate change. These changes in temperature and weather patterns can have wide-ranging impacts on ecosystems, agriculture, and human societies.
+                    Efforts to reduce methane emissions are crucial in mitigating climate change. Methane emissions can be reduced by implementing various strategies, such as improving waste management practices, reducing emissions from fossil fuel production and distribution, and implementing agricultural techniques that minimize methane release from livestock and rice cultivation.
+                    Regulatory agencies and international agreements play a vital role in setting targets and standards for methane emissions reduction. For example, the Paris Agreement aims to limit global warming well below 2 degrees Celsius compared to pre-industrial levels, and countries have made commitments to reduce their greenhouse gas emissions, including methane.
+                    In conclusion, methane (L2CH4) is a potent greenhouse gas that contributes to climate change. While it is not directly harmful to human health, its presence in the atmosphere has far-reaching environmental impacts. Controlling methane emissions through various strategies is essential for mitigating climate change and protecting the planet's ecosystems and societies.
+                </div>
+                """,
+                unsafe_allow_html=True)
 
-        # Graph
+            st.write("")
 
-        st.write("")
-        st.pyplot(graph_setup(dates, values, city, "Methane"))
+            # Graph
+
+            a1, a2 = st.columns(2)
+
+            a1.pyplot(single_boxplot_setup(values))
+            df = pd.DataFrame(values, dates)
+            a2.pyplot(single_areachart_setup(df, values, dates))
+            st.dataframe(top_5_cities(location))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     # CO
     if "CO" in selected_values:
@@ -338,8 +368,6 @@ def display_data():
             unsafe_allow_html=True)
 
         # Scorecard
-
-        mean, values, dates = kpis(latitude,longitude,"L2__CO____")
         
         a2.write("")
         a2.markdown(
@@ -524,6 +552,7 @@ def display_data():
 
 # Main function
 def main():
+
     # Check if the selected_city attribute exists in session state
     if "selected_city" not in st.session_state:
         # Initialize selected_city attribute
