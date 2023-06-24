@@ -19,7 +19,7 @@ def multi_download(output_dir: str, result: dict) -> None:
 def resize_db(path_in: str, path_out: str) -> None:
 
     while True:
-        time.sleep(20)
+        time.sleep(15)
         print("resizing db")
         current_file = ''
         try:
@@ -53,7 +53,7 @@ def main():
                 'L2__SO2___'
                 ]
     begin = '2023-05-15T00:00:00.000Z'
-    end = '2023-05-31T23:59:59.999Z'
+    end = '2023-05-18T23:59:59.999Z'
     output_dir = './data'
     db_path = './db'
     resized_path = './resized'
