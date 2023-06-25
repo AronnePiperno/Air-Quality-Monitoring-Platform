@@ -2,27 +2,25 @@ from dask.distributed import Client
 import dask.array as da
 import dask
 import os
-import zarr
 from datetime import datetime
 import numpy as np
 import xarray as xr
-def by_qa_value():
-    pass
+
 
 def mean_by_date(values, dates):
     unique_dates = np.unique(dates)
     mean_values = []
 
     for date in unique_dates:
-        indices = np.where(date == dates)
+        indices = date == dates
         mean_value = np.nanmean(values[indices])
         mean_values.append(mean_value)
 
     return mean_values, unique_dates
 
-def by_coordinate(latitude, longitude, product, precision = 0.5):
+def by_coordinate(latitude, longitude, product):
     since = datetime.now()
-    client = Client(n_workers=3, threads_per_worker=3, memory_limit='10GB')
+    client = Client(n_workers=3, threads_per_worker=3, memory_limit='4GB')
     dask.config.set({'array.slicing.split_large_chunks': False})
     client.amm.start()
 
@@ -50,12 +48,10 @@ def by_coordinate(latitude, longitude, product, precision = 0.5):
 
     lat = da.where(da.isclose(ds['latitude_bounds'].values, np.float64(round(latitude,1))))
     long = da.where(da.isclose(ds['longitude_bounds'].values, np.float64(round(longitude,1))))
-    print("longpasf",type(longitude))
+
     lat = da.compute(lat)
     long = da.compute(long)
-    print(lat)
-    print(long)
-    print(type(ds["longitude_bounds"].values[0][0]))
+
     ds = ds.sel(latitude=lat[0][0], longitude=long[0][0])
 
 
@@ -63,19 +59,6 @@ def by_coordinate(latitude, longitude, product, precision = 0.5):
     dates = [datetime.fromtimestamp(date).replace(year=2023).date() for date in dates]
 
     mean_values, unique_dates = mean_by_date(np.array(ds[column].values), np.array(dates))
-    '''index = da.where(
-        da.logical_and(store['longitude'][:] >= longitude - precision, store['longitude'][:] <= longitude + precision) &
-        da.logical_and(store['latitude'][:] >= latitude - precision, store['latitude'][:] <= latitude + precision) &
-        (store['qa_value'][:] > 0.5) &
-        (store[column][:] < 9.9692100e+10))
-    index = da.compute(index)'''
-    """
-    db = zarr.open(os.path.join('./db', product + '.zarr'))
-
-    dates = db['datetime_start'][index[0][0]]
-    dates = [datetime.fromtimestamp(date).replace(year=2023).date() for date in dates]
-
-    mean_values, unique_dates = mean_by_date(np.array(db[column][index[0]]), np.array(dates))"""
     to = datetime.now()
     print('Time elapsed', to - since)
     return mean_values, unique_dates
