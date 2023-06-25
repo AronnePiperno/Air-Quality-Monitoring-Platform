@@ -18,7 +18,7 @@ def main():
     db_path = './db'
 
     for pro in products:
-
+        erase_data_folder(output_dir)
         result = search(
             begin_ts=begin,
             end_ts=end,

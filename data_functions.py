@@ -2,6 +2,8 @@ import os
 import glob
 import multiprocessing
 from sentinel5dl import download
+import harp
+
 def multi_download(output_dir: str, result: dict) -> None:
     with multiprocessing.Pool(10) as pool:
         pool.starmap(download, map(
@@ -70,6 +72,11 @@ def process_db(path_in: str, path_out: str, product: str) -> None:
                 nc.to_xarray().to_zarr(path_out + '/' + product + '.zarr')
             os.remove(file)
         except:
-            print("Error resizing file")
-            print('Current file', current_file)
+            print("Error processing file", current_file)
             os.remove(current_file)
+
+def erase_data_folder(path: str) -> None:
+
+    files = glob.glob(path + '/*.nc')
+    for file in files:
+        os.remove(file)

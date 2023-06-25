@@ -1,9 +1,10 @@
 from sentinel5dl import search
 import schedule
+from datetime import datetime, timedelta
 import time
 from data_functions import *
 
-def batch(begin: str, end: str)-> None:
+def batch():
 
     products = ['L2__CH4___',
                 'L2__CO____',
@@ -12,14 +13,18 @@ def batch(begin: str, end: str)-> None:
                 'L2__O3____',
                 'L2__SO2___'
                 ]
-    #begin = '2023-06-01T00:00:00.000Z'
-    #end = '2023-06-15T23:59:59.999Z'
+
+    end = datetime.utcnow().isoformat()
+    begin_datetime = datetime.utcnow() - timedelta(days=1)
+    begin = str(begin_datetime.isoformat()) + 'Z'
+    end = str(end) + 'Z'
 
     output_dir = './data'
     db_path = './db'
 
 
     for pro in products:
+        erase_data_folder(output_dir)
         result = search(
             begin_ts=begin,
             end_ts=end,
@@ -39,12 +44,13 @@ def batch(begin: str, end: str)-> None:
 
 def main():
 
-    schedule.every(10).seconds.do(batch)
+    schedule.every().day.at("00:00").do(batch)
 
     while True:
         schedule.run_pending()
-        time.sleep(1)
+        time.sleep(10)
 
 
 if __name__ == '__main__':
+
     main()
