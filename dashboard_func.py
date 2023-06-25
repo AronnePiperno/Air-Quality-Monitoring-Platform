@@ -1,14 +1,10 @@
 import streamlit as st
-import numpy as np
-from PIL import Image
 import matplotlib.pyplot as plt
-import matplotlib.dates as mdates
 import numpy as np
 from geopy.geocoders import Nominatim
 import data_retrieval
 import base64
 import seaborn as sns
-import time
 import pandas as pd
 
 def kpis(latitude, longitude, product):
@@ -135,3 +131,6 @@ def add_bg_from_local(image_file):
     """,
     unsafe_allow_html=True
     )
+
+if __name__ == '__main__':
+    pass

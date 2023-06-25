@@ -327,7 +327,7 @@ def display_data():
                     if location is None:
                         st.error("I'm sorry, I could not find this city!")
                     else:
-                        st.pyplot(graph_setup(df_CO, city, city_2nd, "L2__CO____"))
+                        st.pyplot(graph_comparison_setup(df_CO, city, city_2nd, "L2__CO____"))
 
     # HCHO
     if "HCHO" in selected_values:
