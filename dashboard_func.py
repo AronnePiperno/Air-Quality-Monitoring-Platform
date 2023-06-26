@@ -26,7 +26,7 @@ def graph_setup (df, values, dates, product):
     product = product.split('_')[-1]
 
     # Boxplot
-    fig, ax = plt.subplots(1,2, figsize=(35, 12), gridspec_kw={'width_ratios': [1, 2]})
+    fig, ax = plt.subplots(1,2, figsize=(25, 5), gridspec_kw={'width_ratios': [1, 2]})
     box_color = 'black'
     boxplot = ax[0].boxplot(df, boxprops=dict(color=box_color, facecolor="#ffffff"), widths=0.4, patch_artist=True)
     ax[0].patch.set_alpha(0)
@@ -57,13 +57,15 @@ def graph_setup (df, values, dates, product):
         'grid.color': '#cccccc'  # Set grid line color to light gray
     })
 
-    return fig, ax
+    return fig
 
 
 def graph_comparison_setup (df, city, city_comparison, product):
 
     geolocator_comparison = Nominatim(user_agent="MyApp")
     location_comparison = geolocator_comparison.geocode(city_comparison)
+    if location_comparison is None:
+        st.error("I'm sorry, I could not find this city!")
     longitude_comparison = location_comparison.longitude
     latitude_comparison = location_comparison.latitude
     mean_comparison, values_comparison, dates_comparison = kpis(latitude_comparison, longitude_comparison, product)
@@ -75,7 +77,7 @@ def graph_comparison_setup (df, city, city_comparison, product):
     product = product.split('_')[-1]
 
     # Boxplot
-    fig, ax = plt.subplots(1,2, figsize=(35, 12), gridspec_kw={'width_ratios': [1, 2]})
+    fig, ax = plt.subplots(1,2, figsize=(25, 5), gridspec_kw={'width_ratios': [1, 2]})
     box_color = 'black'
     boxplot1 = ax[0].boxplot([df_boxplot[0],df_boxplot_comparison[0]], boxprops=dict(color=box_color, facecolor="#ffffff"), widths=0.4, patch_artist=True, labels=[city, city_comparison])
     ax[0].patch.set_alpha(0)
@@ -106,7 +108,7 @@ def graph_comparison_setup (df, city, city_comparison, product):
             label=city_comparison)  # Add this line
     
     ax[1].set_title("{} trend".format(product), size=20)
-    ax[1].set_ylim(min(values)*0.99, max(values)*1.01)
+    #ax[1].set_ylim(min(values)*0.99, max(values)*1.01)
     ax[1].set_ylabel("{} values".format(product))
     ax[1].legend()
 
