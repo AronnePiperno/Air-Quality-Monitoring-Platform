@@ -15,10 +15,6 @@ def multi_download(output_dir: str, result: dict) -> None:
 def process_db(path_in: str, path_out: str, product: str) -> None:
 
     match product:
-        case 'L2__CH4___':
-            op_val = "CH4_column_volume_mixing_ratio_dry_air_validity"
-            op_der = "CH4_column_volume_mixing_ratio_dry_air"
-            op_measure = '[ppb]'
         case 'L2__CO____':
             op_val = "CO_column_number_density_validity"
             op_der = "CO_column_number_density"

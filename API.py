@@ -96,7 +96,7 @@ async def read_item_comp(city: str, product: ProductName, city_comparison: str):
         else:
             raise HTTPException(status_code=404, detail="Product not found")
 
-        data = pd.DataFrame({product: values, city_comparison: values_comparison})
+        data = pd.DataFrame({city: values, city_comparison: values_comparison})
 
         data = data.set_index(dates)
         data = data.fillna("")
