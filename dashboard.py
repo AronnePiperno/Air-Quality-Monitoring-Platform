@@ -49,14 +49,14 @@ def city_selection():
 # Page 2
 
 def display_data():
-    # Fetch and display data for the selected city
-    # You can customize this part to fetch and display the relevant data
 
     global mean_CO
     global mean_HCHO
     global mean_NO2
     global mean_O3
     global mean_SO2
+
+    print('mrn_CO', mean_CO)
 
     print(mean_CO)
     # Hide Button
@@ -186,9 +186,9 @@ def display_data():
         level_style = "font-size: 50px;"
 
         # CO
-
+        print('overall', mean_CO)
         if mean_CO == None:
-            mean_CO, values_CO, dates_CO = kpis(latitude,longitude,"L2__CO____")
+            mean_CO, values_CO, dates_CO = CO_kpis(latitude,longitude)
             df_CO = pd.DataFrame(values_CO, dates_CO)
 
         co_level_html = f'<div style="{name_style}">CO level</div>'
@@ -491,21 +491,59 @@ def display_data():
             if city_2nd.strip():
                 st.pyplot(graph_comparison_setup(df_SO2, city, city_2nd, "L2__SO2___"))
 
+if 'mean_CO' not in globals():
+    print("IM THERE 1")
+    mean_CO = None
+
+if 'mean_HCHO' not in globals():
+    mean_HCHO = None
+
+if 'mean_NO2' not in globals():
+    mean_NO2 = None
+
+if 'mean_O3' not in globals():
+    mean_O3 = None
+
+if 'mean_SO2' not in globals():
+    mean_SO2 = None
+
+print("IM THERE 2")
+
+@st.cache_data
+def CO_kpis(latitude,longitude):
+    mean_CO, values_CO, dates_CO = kpis(latitude,longitude,"L2__CO____")
+
+    return mean_CO, values_CO, dates_CO
+
+@st.cache_data
+def HCHO_kpis(latitude,longitude):
+    mean_HCHO, values_HCHO, dates_HCHO = kpis(latitude,longitude,"L2__HCHO__")
+
+    return mean_HCHO, values_HCHO, dates_HCHO
+
+@st.cache_data
+def NO2_kpis(latitude,longitude):
+    mean_NO2, values_NO2, dates_NO2 = kpis(latitude,longitude,"L2__NO2___")
+
+    return mean_NO2, values_NO2, dates_NO2
+
+@st.cache_data
+def O3_kpis(latitude,longitude):
+    mean_O3, values_O3, dates_O3 = kpis(latitude,longitude,"L2__O3____")
+
+    return mean_O3, values_O3, dates_O3
+
+@st.cache_data
+def SO2_kpis(latitude,longitude):
+    mean_SO2, values_SO2, dates_SO2 = kpis(latitude,longitude,"L2__SO2___")
+
+    return mean_SO2, values_SO2, dates_SO2
+
+
 # Main function
 def main():
 
-    global mean_CO
-    global mean_HCHO
-    global mean_NO2
-    global mean_O3
-    global mean_SO2
-
-    mean_CO = None
-    mean_HCHO = None
-    mean_NO2 = None
-    mean_O3 = None
-    mean_SO2 = None
-
+    print('IM HERE')
     # Check if the selected_city attribute exists in session state
     if "selected_city" not in st.session_state:
         # Initialize selected_city attribute

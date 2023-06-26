@@ -6,8 +6,7 @@ from data_functions import *
 
 def batch():
 
-    products = ['L2__CH4___',
-                'L2__CO____',
+    products = ['L2__CO____',
                 'L2__HCHO__',
                 'L2__NO2___',
                 'L2__O3____',

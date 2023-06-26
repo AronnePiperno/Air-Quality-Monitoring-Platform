@@ -17,14 +17,7 @@ def mean_by_date(values, dates):
         mean_values.append(mean_value)
 
     return mean_values, unique_dates
-
-def by_coordinate(latitude, longitude, product):
-    since = datetime.now()
-    client = Client(n_workers=3, threads_per_worker=3, memory_limit='4GB')
-    dask.config.set({'array.slicing.split_large_chunks': False})
-    client.amm.start()
-
-
+def return_column(product):
     match product:
         case 'L2__CH4___':
             column = 'CH4_column_volume_mixing_ratio_dry_air'
@@ -41,10 +34,16 @@ def by_coordinate(latitude, longitude, product):
         case _:
             raise ValueError('Product not supported')
 
+    return column
+def by_coordinate(latitude, longitude, product):
+    since = datetime.now()
+    client = Client(n_workers=3, threads_per_worker=3, memory_limit='4GB')
+    dask.config.set({'array.slicing.split_large_chunks': True})
+    client.amm.start()
 
+    column = return_column(product)
 
     ds = xr.open_zarr(os.path.join("./db", product+'.zarr'), chunks='auto')
-
 
     lat = da.where(da.isclose(ds['latitude_bounds'].values, np.float64(round(latitude,1))))
     long = da.where(da.isclose(ds['longitude_bounds'].values, np.float64(round(longitude,1))))
@@ -54,29 +53,53 @@ def by_coordinate(latitude, longitude, product):
 
     ds = ds.sel(latitude=lat[0][0], longitude=long[0][0])
 
-
     dates = ds['datetime_start'].values
     dates = [datetime.fromtimestamp(date).replace(year=2023).date() for date in dates]
 
     mean_values, unique_dates = mean_by_date(np.array(ds[column].values), np.array(dates))
     to = datetime.now()
     print('Time elapsed', to - since)
+
+    client.close()
     return mean_values, unique_dates
 
 
-def by_date(date):
-    pass
+def by_date(latitude: float, longitude: float, product: str, start_date: str, end_date: str):
+    epoch = datetime(2010, 1, 1)
+    client = Client(n_workers=3, threads_per_worker=3, memory_limit='4GB')
+    dask.config.set({'array.slicing.split_large_chunks': False})
+    client.amm.start()
 
-def by_time(time):
-    pass
+    column = return_column(product)
 
-def by_product(product):
-    pass
+    ds = xr.open_zarr(os.path.join("./db", product+'.zarr'), chunks='auto')
+
+    start = np.float64((datetime.strptime(start_date, '%Y-%m-%d') - epoch).total_seconds())
+    end = np.float64((datetime.strptime(end_date, '%Y-%m-%d') - epoch).total_seconds())
+
+    index = da.where((ds['datetime_start'].values >= start) & (ds['datetime_start'].values <= end))
+    lat = da.where(da.isclose(ds['latitude_bounds'].values, np.float64(round(latitude,1))))
+    long = da.where(da.isclose(ds['longitude_bounds'].values, np.float64(round(longitude,1))))
+
+    index = da.compute(index)
+    lat = da.compute(lat)
+    long = da.compute(long)
+
+    ds = ds.sel(time=index[0][0], latitude=lat[0][0], longitude=long[0][0])
+
+    dates = ds['datetime_start'].values
+
+    dates = [datetime.fromtimestamp(date).replace(year=2023).date() for date in dates]
+
+    mean_values, unique_dates = mean_by_date(np.array(ds[column].values), np.array(dates))
+
+    client.close()
+
+    return mean_values, unique_dates
 
 
 def main():
-    by_coordinate(45.4641943, 9.189634, 'L2__CH4___')
+    print(by_date('2023-05-05', '2023-05-10', 51.5, 0.12, 'L2__CO____'))
 
 if __name__ == '__main__':
-    print(by_coordinate(45.4641943, 9.189634, 'L2__CO____'))
-    #main()
+    main()
