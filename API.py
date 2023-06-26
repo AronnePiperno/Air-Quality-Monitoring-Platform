@@ -31,7 +31,7 @@ async def read_item(city: str):
     return {"df": df}
 
 @app.get("/items/{city}?product={products}")
-async def read_item(city: str, products: str):
+async def read_item(city: str, products: list[str]):
 
     latitude, longitude = find_coordinates(city)
     df = None
