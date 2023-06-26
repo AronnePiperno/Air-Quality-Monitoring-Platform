@@ -33,7 +33,7 @@ def by_coordinate(latitude, longitude, product):
         case 'L2__HCHO__':
             column = 'tropospheric_HCHO_column_number_density'
         case 'L2__NO2___':
-            column = 'tropospheric_NO2_column_number_densityn'
+            column = 'tropospheric_NO2_column_number_density'
         case 'L2__O3____':
             column = 'O3_column_number_density'
         case 'L2__SO2___':
