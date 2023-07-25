@@ -5,7 +5,8 @@ import os
 from datetime import datetime
 import numpy as np
 import xarray as xr
-
+import redis
+import pickle
 
 def mean_by_date(values, dates):
     unique_dates = np.unique(dates)
@@ -35,33 +36,57 @@ def return_column(product):
             raise ValueError('Product not supported')
 
     return column
+
+
+def serialize_data(data):
+    return pickle.dumps(data)
+
+
+def deserialize_data(data):
+    return pickle.loads(data)
+
+
 def by_coordinate(latitude, longitude, product):
-    since = datetime.now()
-    client = Client(n_workers=3, threads_per_worker=3, memory_limit='4GB')
-    dask.config.set({'array.slicing.split_large_chunks': True})
-    client.amm.start()
+    with redis.Redis(host='localhost', port=6379, db=0) as redis_client:
+        cache_key = f"{round(latitude,1)}_{round(longitude,1)}_{product}"
 
-    column = return_column(product)
+        # Check if the result is already in the Redis cache
+        if redis_client.exists(cache_key):
+            print("Cache hit!")
+            cached_data = redis_client.get(cache_key)
+            return deserialize_data(cached_data)
 
-    ds = xr.open_zarr(os.path.join("./db", product+'.zarr'), chunks='auto')
+        since = datetime.now()
+        client = Client(n_workers=3, threads_per_worker=3, memory_limit='4GB')
+        dask.config.set({'array.slicing.split_large_chunks': True})
+        client.amm.start()
 
-    lat = da.where(da.isclose(ds['latitude_bounds'].values, np.float64(round(latitude,1))))
-    long = da.where(da.isclose(ds['longitude_bounds'].values, np.float64(round(longitude,1))))
+        column = return_column(product)
 
-    lat = da.compute(lat)
-    long = da.compute(long)
+        ds = xr.open_zarr(os.path.join("./db", product+'.zarr'), chunks='auto')
 
-    ds = ds.sel(latitude=lat[0][0], longitude=long[0][0])
+        lat = da.where(da.isclose(ds['latitude_bounds'].values, np.float64(round(latitude,1))))
+        long = da.where(da.isclose(ds['longitude_bounds'].values, np.float64(round(longitude,1))))
 
-    dates = ds['datetime_start'].values
-    dates = [datetime.fromtimestamp(date).replace(year=2023).date() for date in dates]
+        lat = da.compute(lat)
+        long = da.compute(long)
 
-    mean_values, unique_dates = mean_by_date(np.array(ds[column].values), np.array(dates))
-    to = datetime.now()
-    print('Time elapsed', to - since)
+        ds = ds.sel(latitude=lat[0][0], longitude=long[0][0])
 
-    client.close()
-    return mean_values, unique_dates
+        dates = ds['datetime_start'].values
+        dates = [datetime.fromtimestamp(date).replace(year=2023).date() for date in dates]
+
+        mean_values, unique_dates = mean_by_date(np.array(ds[column].values), np.array(dates))
+        to = datetime.now()
+        print('Time elapsed', to - since)
+
+        client.close()
+
+        # Save the result in the Redis cache before returning it
+        serialized_data = serialize_data((mean_values, unique_dates))
+        redis_client.set(cache_key, serialized_data)
+
+        return mean_values, unique_dates
 
 
 def by_date(latitude: float, longitude: float, product: str, start_date: str, end_date: str):
