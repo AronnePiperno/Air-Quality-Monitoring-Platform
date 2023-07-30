@@ -1,4 +1,4 @@
-import pandas as pd
+
 from dask.distributed import Client
 import dask.array as da
 import dask
@@ -8,6 +8,7 @@ import numpy as np
 import xarray as xr
 import redis
 import pickle
+import aqi
 
 def mean_by_date(values, dates):
     unique_dates = np.unique(dates)
@@ -207,7 +208,7 @@ def calculate_overall_aqi(latitude, longitude):
     return overall_aqi
 
 
-import aqi
+
 def calc_aqi(latitude, longitude):
     last_date = str(calculate_last_date() - timedelta(days=2))
     pre_last_date = str(datetime.strptime(last_date, '%Y-%m-%d').date() - timedelta(days=1))
