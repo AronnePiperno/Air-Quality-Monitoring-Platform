@@ -41,12 +41,13 @@ def return_column(product):
 
 
 def calculate_last_date():
-    ds = xr.open_zarr(os.path.join("./db", 'L2__CO____'+'.zarr'), chunks='auto')
-    dates = ds['datetime_start'].values
-    date = max(dates)
-    last_date = datetime.fromtimestamp(date).replace(year=2023).date()
+    with Client(n_workers=3, threads_per_worker=3, memory_limit='4GB'):
+        ds = xr.open_zarr(os.path.join("./db", 'L2__CO____'+'.zarr'), chunks='auto')
+        dates = ds['datetime_start'].values
+        date = max(dates)
+        last_date = datetime.fromtimestamp(date).replace(year=2023).date()
 
-    return last_date
+        return last_date
 
 
 def serialize_data(data):
@@ -227,7 +228,7 @@ def calc_aqi(latitude, longitude):
 
     print(CO, NO2, O3, SO2)
     try:
-        aq = aqi.to_aqi([
+        return aqi.to_aqi([
         (aqi.POLLUTANT_CO_8H, 0.9),
         (aqi.POLLUTANT_NO2_1H, NO2),
         (aqi.POLLUTANT_O3_1H, O3),
@@ -238,8 +239,7 @@ def calc_aqi(latitude, longitude):
         return 0
 
 def main():
-    print(calc_aqi(11.1, 11.12))
-    #print(by_date(46.07, 11.12, "L2__CO____", '2023-06-15', '2023-06-16'))
+    pass
 
 
 if __name__ == '__main__':

@@ -134,5 +134,34 @@ def add_bg_from_local(image_file):
     unsafe_allow_html=True
     )
 
+
+def get_color(value):
+
+    color_ranges = [
+        {'min_value': 0, 'max_value': 25, 'color': '#00FF00'},
+        {'min_value': 25, 'max_value': 50, 'color': '#FFFF00'},
+        {'min_value': 50, 'max_value': 75, 'color': '#FFA500'},
+        {'min_value': 75, 'max_value': 100, 'color': '#FF0000'},
+
+    ]
+
+    for color_range in color_ranges:
+        if color_range['min_value'] <= value <= color_range['max_value']:
+            return color_range['color']
+
+    return '#FFFFFF'
+
+def get_quality(color):
+    if color == '#00FF00':
+        return 'Good'
+    elif color == '#FFFF00':
+        return 'Fair'
+    elif color == '#FFA500':
+        return 'Poor'
+    elif color == '#FF0000':
+        return 'Very Poor'
+    else:
+        return 'Data not available'
+
 if __name__ == '__main__':
     pass

@@ -258,6 +258,41 @@ def display_data():
             Sulfur dioxide (SO2) is a colorless gas with a pungent odor that is primarily emitted from the burning of fossil fuels, particularly in power plants and industrial processes. It is a respiratory irritant and contributes to the formation of acid rain. Efforts are underway to reduce SO2 emissions through the use of cleaner fuels and emission control technologies.
         </div>
         """, unsafe_allow_html=True)
+
+        st.write("")
+        aqi_value = data_retrieval.calc_aqi(latitude, longitude)
+        st.write(
+            f"<p style='color:#00000; font-family: Workhorse Regular, sans-serif;'>AQI: <strong>{aqi_value}</strong>",
+            unsafe_allow_html=True)
+        st.write("")
+        color = get_color(aqi_value)
+        html_code = f"""
+            <div style="width: 200px; height: 200px; background-color: {color}; 
+                        display: flex; justify-content: center; align-items: center;">
+                <p style="color: white; font-size: 24px;">{aqi_value}</p>
+            </div>
+        """
+        st.markdown(html_code, unsafe_allow_html=True)
+        quality = get_quality(color)
+        st.write("")
+        st.write(f"<p style='color:#00000; font-family: Workhorse Regular, sans-serif;'>The Air Quality is <strong>{quality}</strong>",
+                 unsafe_allow_html=True)
+        st.write("")
+        st.markdown('''
+            <div style="display: flex; justify-content: space-between; margin-top: 20px;">
+                <div style="background-color: green; height: 20px; width: 20px; border-radius: 5px;"></div>
+                <div style="background-color: yellow; height: 20px; width: 20px; border-radius: 5px;"></div>
+                <div style="background-color: orange; height: 20px; width: 20px; border-radius: 5px;"></div>
+                <div style="background-color: red; height: 20px; width: 20px; border-radius: 5px;"></div>
+            </div>
+            <div style="display: flex; justify-content: space-between;">
+                <span>Good</span>
+                <span>Fair</span>
+                <span>Poor</span>
+                <span>Very Poor</span>
+            </div>
+        ''', unsafe_allow_html=True)
+
         
         
     # CO
