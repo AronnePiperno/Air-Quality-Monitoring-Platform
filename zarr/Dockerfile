@@ -10,4 +10,4 @@ SHELL ["conda", "run", "-n", "big_data", "/bin/bash", "-c"]
 
 COPY . /app
 
-CMD ["conda", "run", "-n", "big_data", "flask", "run", "--host", "0.0.0.0", "--port", "5000", "&&", "python", "historical_data.py"]
+CMD ["./run.sh"]
