@@ -1,0 +1,13 @@
+FROM continuumio/miniconda3:latest
+
+WORKDIR /app
+
+COPY ./environment.yml /app/environment.yml
+
+RUN conda env create -f environment.yml
+
+SHELL ["conda", "run", "-n", "big_data", "/bin/bash", "-c"]
+
+COPY . /app
+
+CMD ["conda", "run", "-n", "big_data", "uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
