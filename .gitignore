@@ -1,4 +1,4 @@
-zarr/data
-zarr/db
+zarr/data/
+zarr/db/
 .idea/
 
