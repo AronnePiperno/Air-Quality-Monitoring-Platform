@@ -11,15 +11,13 @@ def main():
                 'L2__SO2___'
                 ]
 
-    #begin = '2020-06-01T00:00:00.000Z'
-    #end = str(datetime.utcnow().isoformat() - timedelta(days=5)) + 'Z'
+    begin = '2020-06-01T00:00:00.000Z'
+    end = str(datetime.utcnow().isoformat() - timedelta(days=5)) + 'Z'
 
-    begin = '2023-06-01T00:00:00.000Z'
-    end = '2023-06-01T06:00:00.000Z'
 
     output_dir = './data'
     db_path = './db'
-    print("debug")
+
     for pro in products:
         erase_data_folder(output_dir)
         result = search(
