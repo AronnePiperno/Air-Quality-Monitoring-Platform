@@ -1,18 +1,17 @@
+# Import necessary functions from modules
 from dashboard_func import *
 from geopy.geocoders import Nominatim
 import requests
 
-
-# Page setting
+# Configure the Streamlit page settings
 st.set_page_config(layout="wide",
                    page_title="Air Quality Monitoring",
-                   page_icon= "./images/esa-logo-color.png",
-                   )
+                   page_icon="./images/esa-logo-color.png")
 
-# Page 1
+
+# Define the function for the first page - city selection
 def city_selection():
-
-    # Hide Button
+    # Hide unnecessary elements using HTML/CSS style
     hide_streamlit_style = """
     <style>
     #MainMenu {visibility: hidden;}
@@ -20,32 +19,41 @@ def city_selection():
     header {visibility: hidden;}
     </style>
     """
-
     st.markdown(hide_streamlit_style, unsafe_allow_html=True)
 
-    # Add background image
+    # Set background image using a function from dashboard_func module
     add_bg_from_local("images/08wildfires-blog-aqi-500-vqhb-videoSixteenByNine3000.jpg")
 
-    # Set up
-    st.markdown("<h1 style='color:#00000; font-size: 40px; font-family: Workhorse, sans-serif;'>Location Selection</h1>", unsafe_allow_html=True)
+    # Display a styled heading for location selection
+    st.markdown(
+        "<h1 style='color:#00000; font-size: 40px; font-family: Workhorse, sans-serif;'>Location Selection</h1>",
+        unsafe_allow_html=True)
+
+    # Create a text input widget for the user to enter a city, region, or state
     city = st.text_input("Enter a City, Region or a State:")
 
+    # Check if the form has been submitted
     if st.form(key='city_form'):
-        # Validate city input
+        # Validate city input (if not empty)
         if city.strip():
+            # Use Nominatim geocoder to obtain location information
             geolocator = Nominatim(user_agent="your_app_name")
             location = geolocator.geocode(city)
             if location is None:
                 st.error("I'm sorry, I could not find this location!")
             else:
+                # Store selected city in the session state
                 st.session_state.selected_city = city
-                st.session_state.city_selected = True  # Set flag to indicate city selection
+                # Set a flag to indicate city selection
+                st.session_state.city_selected = True
+                # Trigger a rerun of the Streamlit app to update the page
                 st.experimental_rerun()
+
+
 # Page 2
 
 def display_data():
     # Fetch and display data for the selected city
-    # You can customize this part to fetch and display the relevant data
 
     # Hide Button
     hide_streamlit_style = """
@@ -57,6 +65,7 @@ def display_data():
     """
     st.markdown(hide_streamlit_style, unsafe_allow_html=True)
 
+    # CSS styling to set the background image for the page
     page_bg_img = f"""
     <style>
     [data-testid="stAppViewContainer"] > .main {{
@@ -68,24 +77,25 @@ def display_data():
     }}
     </style>
     """
-
     st.markdown(page_bg_img, unsafe_allow_html=True)
 
-    # TITLE
-    st.markdown("<h1 style='color:#00000; font-size: 40px; font-family: Workhorse Rough, sans-serif;'>Air Quality Monitoring Platform</h1>", unsafe_allow_html=True)
-    st.markdown("<h1 style='color:#00000; font-size: 15px; font-family: Workhorse Rough, sans-serif; font-style: italic; margin-top: -30px'>Alessandro de Ferrari, Tommaso Ferretti</h1>", unsafe_allow_html=True)
+    # Display the title and author information
+    st.markdown(
+        "<h1 style='color:#00000; font-size: 40px; font-family: Workhorse Rough, sans-serif;'>Air Quality Monitoring Platform</h1>",
+        unsafe_allow_html=True)
+    st.markdown(
+        "<h1 style='color:#00000; font-size: 15px; font-family: Workhorse Rough, sans-serif; font-style: italic; margin-top: -30px'>Alessandro de Ferrari, Tommaso Ferretti</h1>",
+        unsafe_allow_html=True)
 
+    # Restart button to reset city selection
     if st.button("Restart"):
+        city = None
+        st.session_state.selected_city = None
+        st.session_state.city_selected = False  # Remove the flag to reset city selection
+        st.experimental_rerun()
 
-            city = None
-            st.session_state.selected_city = None
-            st.session_state.city_selected = False  # Remove the flag to reset city selection
-            st.experimental_rerun()
-
-    # FIRST ROW
-
-    a1, a2, a3 = st.columns(3)  # Adjust the width values as per your requirement
-
+    # Display images in the first row using columns
+    a1, a2, a3 = st.columns(3)
     with open("./images/esa-logo-color.png", "rb") as f:
         image_data = f.read()
     encoded_image = base64.b64encode(image_data).decode()
@@ -104,9 +114,7 @@ def display_data():
     markdown_text = f'<div style="text-align: center;"><img src="data:image/jpg;base64,{encoded_image}" alt="Image" style="width: 200px;"></div>'
     a3.markdown(markdown_text, unsafe_allow_html=True)
 
-
     # Introduction
-
     container_style = '''
         border-radius: 10px;
         background-color: #ffffff;
@@ -134,15 +142,18 @@ def display_data():
 
     st.write("<div style='display: flex; justify-content: center;'>", unsafe_allow_html=True)
     st.write("<div style='text-align: center;'>", unsafe_allow_html=True)
-    st.write("<p style='color:#00000; font-family: Workhorse Regular, sans-serif;'><strong>Location:</strong> " + str(location) + "</p>", unsafe_allow_html=True)
-    st.write("<p style='color:#00000; font-family: Workhorse Regular, sans-serif;'><strong>Latitude:</strong> " + str(latitude) + "</p>", unsafe_allow_html=True)
-    st.write("<p style='color:#00000; font-family: Workhorse Regular, sans-serif;'><strong>Longitude:</strong> " + str(longitude) + "</p>", unsafe_allow_html=True)
+    st.write("<p style='color:#00000; font-family: Workhorse Regular, sans-serif;'><strong>Location:</strong> " + str(
+        location) + "</p>", unsafe_allow_html=True)
+    st.write("<p style='color:#00000; font-family: Workhorse Regular, sans-serif;'><strong>Latitude:</strong> " + str(
+        latitude) + "</p>", unsafe_allow_html=True)
+    st.write("<p style='color:#00000; font-family: Workhorse Regular, sans-serif;'><strong>Longitude:</strong> " + str(
+        longitude) + "</p>", unsafe_allow_html=True)
     st.write("</div>", unsafe_allow_html=True)
     st.write("</div>", unsafe_allow_html=True)
-
 
     # Select the pollutant
-    selected_values = st.selectbox("Select the pollutant you are looking for:", (["CO", "HCHO", "NO2", "O3", "SO2", "Overall"]))
+    selected_values = st.selectbox("Select the pollutant you are looking for:",
+                                   (["CO", "HCHO", "NO2", "O3", "SO2", "Overall"]))
 
     # Overall
     if "Overall" in selected_values:
@@ -171,9 +182,11 @@ def display_data():
         color = get_color(aqi_value)
         quality = get_quality(color)
 
+        # HTML for AQI scorecard name and level
         aqi_level_html = f'<div style="{name_style}">AQI value</div>'
         level_aqi_html = f'<div style="{level_style}">{aqi_value}</div>'
 
+        # Display AQI information
         container_html = f'<div style="border-radius: 10px; background-color: {color}; padding: 20px; margin-bottom: 20px; color: #000000; font-family: Workhorse Regular, sans-serif; text-align: center;">{aqi_level_html}{level_aqi_html}</div>'
         a1.markdown(container_html, unsafe_allow_html=True)
 
@@ -182,10 +195,12 @@ def display_data():
             unsafe_allow_html=True)
         a1.write("")
 
+        # Similar sections for other pollutants (CO, HCHO, NO2, O3, SO2)...
+        # Each section fetches data, calculates mean values, and displays a scorecard
+
         # CO
 
         mean_CO, values_CO, dates_CO = kpis(latitude, longitude, "L2__CO____")
-        df_CO = pd.DataFrame(values_CO, dates_CO)
 
         co_level_html = f'<div style="{name_style}">CO level (mol/m^2)</div>'
         level_co_html = f'<div style="{level_style}">{mean_CO}</div>'
@@ -196,7 +211,6 @@ def display_data():
         # HCHO
 
         mean_HCHO, values_HCHO, dates_HCHO = kpis(latitude, longitude, "L2__HCHO__")
-        df_HCHO = pd.DataFrame(values_HCHO, dates_HCHO)
 
         hcho_level_html = f'<div style="{name_style}">HCHO level (mol/m^2)</div>'
         level_hcho_html = f'<div style="{level_style}">{mean_HCHO}</div>'
@@ -207,7 +221,6 @@ def display_data():
         # NO2
 
         mean_NO2, values_NO2, dates_NO2 = kpis(latitude, longitude, "L2__NO2___")
-        df_NO2 = pd.DataFrame(values_NO2, dates_NO2)
 
         no2_level_html = f'<div style="{name_style}">NO2 level (mol/m^2)</div>'
         level_no2_html = f'<div style="{level_style}">{mean_NO2}</div>'
@@ -218,7 +231,6 @@ def display_data():
         # O3
 
         mean_O3, values_O3, dates_O3 = kpis(latitude, longitude, "L2__O3____")
-        df_O3 = pd.DataFrame(values_O3, dates_O3)
 
         o3_level_html = f'<div style="{name_style}">O3 level (mol/m^2)</div>'
         level_o3_html = f'<div style="{level_style}">{mean_O3}</div>'
@@ -229,7 +241,6 @@ def display_data():
         # SO2
 
         mean_SO2, values_SO2, dates_SO2 = kpis(latitude, longitude, "L2__SO2___")
-        df_SO2 = pd.DataFrame(values_SO2, dates_SO2)
 
         so2_level_html = f'<div style="{name_style}">SO2 level (mol/m^2)</div>'
         level_so2_html = f'<div style="{level_style}">{mean_SO2}</div>'
@@ -274,13 +285,16 @@ def display_data():
             Sulfur dioxide (SO2) is a colorless gas with a pungent odor that is primarily emitted from the burning of fossil fuels, particularly in power plants and industrial processes. It is a respiratory irritant and contributes to the formation of acid rain. Efforts are underway to reduce SO2 emissions through the use of cleaner fuels and emission control technologies.
         </div>
         """, unsafe_allow_html=True)
-        
-        
+
     # CO
     if "CO" in selected_values:
 
+        # Empty line for spacing
         st.write("")
-        st.markdown("<h1 style='font-size: 30px;  font-family: Workhorse Rough, sans-serif;'>Carbon Monoxide (CO)</h1>", unsafe_allow_html=True)
+        # Title for Carbon Monoxide (CO)
+        st.markdown("<h1 style='font-size: 30px;  font-family: Workhorse Rough, sans-serif;'>Carbon Monoxide (CO)</h1>",
+                    unsafe_allow_html=True)
+        # Description for Carbon Monoxide (CO)
         st.markdown(
             """
             <div style="text-align: justify;  font-family: Workhorse Regular, sans-serif;font-size: 13px; margin-top: -10px">
@@ -293,38 +307,52 @@ def display_data():
             </div>
             """,
             unsafe_allow_html=True)
+
+        # Empty line for spacing
         st.write("")
         st.write("")
 
-        st.write("<p style='color:#00000; font-family: Workhorse Regular, sans-serif;'>Critical threshold for CO: <strong>0.033 mol/m^2</strong>", unsafe_allow_html=True)
+        # Critical threshold for CO
+        st.write(
+            "<p style='color:#00000; font-family: Workhorse Regular, sans-serif;'>Critical threshold for CO: <strong>0.033 mol/m^2</strong>",
+            unsafe_allow_html=True)
         st.write("")
 
-        mean_CO, values_CO, dates_CO = kpis(latitude,longitude,"L2__CO____")
+        # Fetch data for CO
+        mean_CO, values_CO, dates_CO = kpis(latitude, longitude, "L2__CO____")
         df_CO = pd.DataFrame(values_CO, dates_CO)
 
-        if len(values_CO)==0:
+        if len(values_CO) == 0:
+            # If no data is available, display a message
             st.write("")
-            st.write("<div style='display: flex; justify-content: center; align-items: center; height: 100vh; text-align: center; font-family: Workhorse, sans-serif;'>", unsafe_allow_html=True)
+            st.write(
+                "<div style='display: flex; justify-content: center; align-items: center; height: 100vh; text-align: center; font-family: Workhorse, sans-serif;'>",
+                unsafe_allow_html=True)
             st.write("<h3>No data available for this pollutant</h3>")
             st.write("</div>", unsafe_allow_html=True)
-       
+
         else:
 
             # Graph
 
-            st.pyplot(graph_setup(df_CO, values_CO, dates_CO, "L2__CO____"))
+            st.pyplot(graph_setup(df_CO, "L2__CO____"))
             st.write("")
+            # Ask the user if they want to compare the selected city with another location
             city = location.raw['display_name'].split(", ")[0]
             city_2nd = st.text_input(f"Do you want to compare {city} with another location?")
             if city_2nd.strip():
+                # If the user enters a city, fetch data for the second location
                 st.pyplot(graph_comparison_setup(df_CO, city, city_2nd, "L2__CO____"))
-
 
     # HCHO
     if "HCHO" in selected_values:
 
+        # Empty line for spacing
         st.write("")
-        st.markdown("<h1 style='font-size: 30px;  font-family: Workhorse Rough, sans-serif;'>Formaldehyde (HCHO)</h1>", unsafe_allow_html=True)
+        # Title for Formaldehyde (HCHO)
+        st.markdown("<h1 style='font-size: 30px;  font-family: Workhorse Rough, sans-serif;'>Formaldehyde (HCHO)</h1>",
+                    unsafe_allow_html=True)
+        # Description for Formaldehyde (HCHO)
         st.markdown(
             """
             <div style="text-align: justify; font-family: Workhorse Regular, sans-serif; font-size: 13px; margin-top: -10px">
@@ -337,39 +365,53 @@ def display_data():
             </div>
             """,
             unsafe_allow_html=True)
-        
+
         st.write("")
         st.write("")
 
-        st.write("<p style='color:#00000; font-family: Workhorse Regular, sans-serif;'>Critical threshold for HCHO: <strong>0.0025 mol/m^2</strong>", unsafe_allow_html=True)
+        # Critical threshold for HCHO
+        st.write(
+            "<p style='color:#00000; font-family: Workhorse Regular, sans-serif;'>Critical threshold for HCHO: <strong>0.0025 mol/m^2</strong>",
+            unsafe_allow_html=True)
         st.write("")
 
-        mean_HCHO, values_HCHO, dates_HCHO = kpis(latitude,longitude,"L2__HCHO__")
+        # Fetch data for HCHO
+        mean_HCHO, values_HCHO, dates_HCHO = kpis(latitude, longitude, "L2__HCHO__")
         df_HCHO = pd.DataFrame(values_HCHO, dates_HCHO)
 
-        if len(values_HCHO)==0:
+        if len(values_HCHO) == 0:
             st.write("")
-            st.write("<div style='display: flex; justify-content: center; align-items: center; height: 100vh; text-align: center; font-family: Workhorse, sans-serif;'>", unsafe_allow_html=True)
+
+            # If no data is available, display a message
+            st.write(
+                "<div style='display: flex; justify-content: center; align-items: center; height: 100vh; text-align: center; font-family: Workhorse, sans-serif;'>",
+                unsafe_allow_html=True)
             st.write("<h3>No data available for this pollutant</h3>")
             st.write("</div>", unsafe_allow_html=True)
-        
+
         else:
 
             # Graph
 
-            st.pyplot(graph_setup(df_HCHO, values_HCHO, dates_HCHO, "L2__HCHO__"))
+            st.pyplot(graph_setup(df_HCHO, "L2__HCHO__"))
             st.write("")
             city = location.raw['display_name'].split(", ")[0]
+
+            # Ask the user if they want to compare the selected city with another location
             city_2nd = st.text_input(f"Do you want to compare {city} with another location?")
             if city_2nd.strip():
                 st.pyplot(graph_comparison_setup(df_HCHO, city, city_2nd, "L2__HCHO__"))
 
-
     # NO2
     if "NO2" in selected_values:
 
+        # Empty line for spacing
         st.write("")
-        st.markdown("<h1 style='font-size: 30px;  font-family: Workhorse Rough, sans-serif;'>Nitrogen Dioxide (NO2)</h1>", unsafe_allow_html=True)
+        # Title for Nitrogen Dioxide (NO2)
+        st.markdown(
+            "<h1 style='font-size: 30px;  font-family: Workhorse Rough, sans-serif;'>Nitrogen Dioxide (NO2)</h1>",
+            unsafe_allow_html=True)
+        # Description for Nitrogen Dioxide (NO2)
         st.markdown(
             """
             <div style="text-align: justify; font-family: Roboto; font-size: 13px; margin-top: -10px">
@@ -382,39 +424,51 @@ def display_data():
             </div>
             """,
             unsafe_allow_html=True)
-        
+
         st.write("")
         st.write("")
 
-        st.write("<p style='color:#00000; font-family: Workhorse Regular, sans-serif;'>Critical threshold for NO2: <strong>0.00006 mol/m^2</strong>", unsafe_allow_html=True)
+        st.write(
+            "<p style='color:#00000; font-family: Workhorse Regular, sans-serif;'>Critical threshold for NO2: <strong>0.00006 mol/m^2</strong>",
+            unsafe_allow_html=True)
         st.write("")
 
-        mean_NO2, values_NO2, dates_NO2 = kpis(latitude,longitude,"L2__NO2___")
+        # Fetch data for NO2
+        mean_NO2, values_NO2, dates_NO2 = kpis(latitude, longitude, "L2__NO2___")
         df_NO2 = pd.DataFrame(values_NO2, dates_NO2)
 
-        if len(values_NO2)==0:
+        if len(values_NO2) == 0:
             st.write("")
-            st.write("<div style='display: flex; justify-content: center; align-items: center; height: 100vh; text-align: center; font-family: Workhorse, sans-serif;'>", unsafe_allow_html=True)
+            # If no data is available, display a message
+            st.write(
+                "<div style='display: flex; justify-content: center; align-items: center; height: 100vh; text-align: center; font-family: Workhorse, sans-serif;'>",
+                unsafe_allow_html=True)
             st.write("<h3>No data available for this pollutant</h3>")
             st.write("</div>", unsafe_allow_html=True)
-        
+
         else:
 
             # Graph
 
-            st.pyplot(graph_setup(df_NO2, values_NO2, dates_NO2, "L2__NO2___"))
+            st.pyplot(graph_setup(df_NO2, "L2__NO2___"))
             st.write("")
             city = location.raw['display_name'].split(", ")[0]
+
+            # Ask the user if they want to compare the selected city with another location
             city_2nd = st.text_input(f"Do you want to compare {city} with another location?")
             if city_2nd.strip():
                 st.pyplot(graph_comparison_setup(df_NO2, city, city_2nd, "L2__NO2___"))
 
-
     # O3
     if "O3" in selected_values:
 
+        # Empty line for spacing
         st.write("")
-        st.markdown("<h1 style='font-size: 30px;  font-family: Workhorse Rough, sans-serif;'>Ground-level Ozone (O3)</h1>", unsafe_allow_html=True)
+        # Title for Ground-level Ozone (O3)
+        st.markdown(
+            "<h1 style='font-size: 30px;  font-family: Workhorse Rough, sans-serif;'>Ground-level Ozone (O3)</h1>",
+            unsafe_allow_html=True)
+        # Description for Ground-level Ozone (O3)
         st.markdown(
             """
             <div style="text-align: justify; font-family: Roboto; font-size: 13px; margin-top: -10px">
@@ -426,39 +480,48 @@ def display_data():
             </div>
             """,
             unsafe_allow_html=True)
-        
-        st.write("")
-        st.write("")
 
-        st.write("<p style='color:#00000; font-family: Workhorse Regular, sans-serif;'>Critical threshold for O3: <strong>0.17 mol/m^2</strong>", unsafe_allow_html=True)
         st.write("")
-
-        mean_O3, values_O3, dates_O3 = kpis(latitude,longitude,"L2__O3____")
+        st.write("")
+        # Critical threshold for O3
+        st.write(
+            "<p style='color:#00000; font-family: Workhorse Regular, sans-serif;'>Critical threshold for O3: <strong>0.17 mol/m^2</strong>",
+            unsafe_allow_html=True)
+        st.write("")
+        # Fetch data for O3
+        mean_O3, values_O3, dates_O3 = kpis(latitude, longitude, "L2__O3____")
         df_O3 = pd.DataFrame(values_O3, dates_O3)
 
-        if len(values_O3)==0:
+        if len(values_O3) == 0:
+            # If no data is available, display a message
             st.write("")
-            st.write("<div style='display: flex; justify-content: center; align-items: center; height: 100vh; text-align: center; font-family: Workhorse, sans-serif;'>", unsafe_allow_html=True)
+            st.write(
+                "<div style='display: flex; justify-content: center; align-items: center; height: 100vh; text-align: center; font-family: Workhorse, sans-serif;'>",
+                unsafe_allow_html=True)
             st.write("<h3>No data available for this pollutant</h3>")
             st.write("</div>", unsafe_allow_html=True)
-        
+
         else:
 
             # Graph
 
-            st.pyplot(graph_setup(df_O3, values_O3, dates_O3, "L2__O3____"))
+            st.pyplot(graph_setup(df_O3, "L2__O3____"))
             st.write("")
             city = location.raw['display_name'].split(", ")[0]
+            # Ask the user if they want to compare the selected city with another location
             city_2nd = st.text_input(f"Do you want to compare {city} with another location?")
             if city_2nd.strip():
-                st.pyplot(graph_comparison_setup(df_O3, city, city_2nd, "L2__O3____"))       
+                st.pyplot(graph_comparison_setup(df_O3, city, city_2nd, "L2__O3____"))
 
-
-    # SO2
+                # SO2
     if "SO2" in selected_values:
 
+        # Empty line for spacing
         st.write("")
-        st.markdown("<h1 style='font-size: 30px;  font-family: Workhorse Rough, sans-serif;'>Sulfur Dioxide (SO2)</h1>", unsafe_allow_html=True)
+        # Title for Sulfur Dioxide (SO2)
+        st.markdown("<h1 style='font-size: 30px;  font-family: Workhorse Rough, sans-serif;'>Sulfur Dioxide (SO2)</h1>",
+                    unsafe_allow_html=True)
+        # Description for Sulfur Dioxide (SO2)
         st.markdown(
             """
             <div style="text-align: justify; font-family: Roboto; font-size: 13px; margin-top: -10px">
@@ -471,36 +534,42 @@ def display_data():
             </div>
             """,
             unsafe_allow_html=True)
-        
-        st.write("")
-        st.write("")
 
-        st.write("<p style='color:#00000; font-family: Workhorse Regular, sans-serif;'>Critical threshold for SO2: <strong>0.0003 mol/m^2</strong>", unsafe_allow_html=True)
         st.write("")
-
-        mean_SO2, values_SO2, dates_SO2 = kpis(latitude,longitude,"L2__SO2___")
+        st.write("")
+        # Critical threshold for SO2
+        st.write(
+            "<p style='color:#00000; font-family: Workhorse Regular, sans-serif;'>Critical threshold for SO2: <strong>0.0003 mol/m^2</strong>",
+            unsafe_allow_html=True)
+        st.write("")
+        # Fetch data for SO2
+        mean_SO2, values_SO2, dates_SO2 = kpis(latitude, longitude, "L2__SO2___")
         df_SO2 = pd.DataFrame(values_SO2, dates_SO2)
 
-        if len(values_SO2)==0:
+        if len(values_SO2) == 0:
             st.write("")
-            st.write("<div style='display: flex; justify-content: center; align-items: center; height: 100vh; text-align: center; font-family: Workhorse, sans-serif;'>", unsafe_allow_html=True)
+            # If no data is available, display a message
+            st.write(
+                "<div style='display: flex; justify-content: center; align-items: center; height: 100vh; text-align: center; font-family: Workhorse, sans-serif;'>",
+                unsafe_allow_html=True)
             st.write("<h3>No data available for this pollutant</h3>")
             st.write("</div>", unsafe_allow_html=True)
-        
+
         else:
 
             # Graph
 
-            st.pyplot(graph_setup(df_SO2, values_SO2, dates_SO2, "L2__SO2___"))
+            st.pyplot(graph_setup(df_SO2, "L2__SO2___"))
             st.write("")
             city = location.raw['display_name'].split(", ")[0]
+            # Ask the user if they want to compare the selected city with another location
             city_2nd = st.text_input(f"Do you want to compare {city} with another location?")
             if city_2nd.strip():
                 st.pyplot(graph_comparison_setup(df_SO2, city, city_2nd, "L2__SO2___"))
 
+
 # Main function
 def main():
-
     # Check if the selected_city attribute exists in session state
     if "selected_city" not in st.session_state:
         # Initialize selected_city attribute
@@ -511,6 +580,7 @@ def main():
         city_selection()
     else:
         display_data()
+
 
 if __name__ == '__main__':
     main()
