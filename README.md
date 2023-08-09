@@ -18,7 +18,7 @@ The following specifications must be met in order to use and display the project
 ```python
 clone https://github.com/AronnePiperno/Air-Quality-Monitoring-Platform
    ```
-2. Download the demo data here and unzip it in the "zarr" folder: [a link](https://drive.google.com/file/d/1ECsJumwltPArqaAAP9asZzfKDH0Kqods/view?usp=sharing)
+2. Download the demo data and unzip it in the "zarr" folder: [demo DB link](https://drive.google.com/file/d/1ECsJumwltPArqaAAP9asZzfKDH0Kqods/view?usp=sharing)
 
 3. Execute the following commands
 
