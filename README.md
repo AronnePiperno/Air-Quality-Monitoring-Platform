@@ -16,17 +16,17 @@ The following specifications must be met in order to use and display the project
 1. Download the project:
 
 ```python
-   clone https://github.com/AronnePiperno/Air-Quality-Monitoring-Platform
+clone https://github.com/AronnePiperno/Air-Quality-Monitoring-Platform
    ```
 2. Download the demo data here and unzip it in the "zarr" folder:
 
 3. Execute the following commands
 
 ```python
-   docker-compose build
+docker-compose build
    ```
 ```python
-   docker-compose up
+docker-compose up
    ```
 
 4. To access the dashboard, use the link http://localhost:8501/. Whereas, if you want to access the API documentation use the link http://localhost:8000/docs
