@@ -23,10 +23,10 @@ The following specifications must be met in order to use and display the project
 3. Execute the following commands
 
 ```python
-docker-compose build
+   docker-compose build
    ```
 ```python
-docker-compose up
+   docker-compose up
    ```
 
 4. To access the dashboard, use the link http://localhost:8501/. Whereas, if you want to access the API documentation use the link http://localhost:8000/docs
