@@ -29,7 +29,7 @@ docker-compose build
 docker-compose up
    ```
 
-4. To access the dashboard, use the link http://localhost:8501/. Whereas, if you want to access the API documentation use the link http://localhost:8000/docs
+4. To access the dashboard, use the link http://localhost:8501/. Whereas, if you want to access the API documentation use the link http://localhost:8000/docs.
 
 ## Contributing
 Contributions to this project are welcome. If you encounter any issues or have suggestions for improvement, please open an issue or submit a pull request on the project's GitHub repository.
