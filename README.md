@@ -8,7 +8,7 @@ The project focuses on global air quality monitoring using ESA's Sentinel5P sate
 
 The following specifications must be met in order to use and display the project:
 - At least 4 cores
-- 32GB RAM
+- At least 32GB RAM (if you want to download more data)
 - Have Docker installed on your device
 
 ## Demo Version Usage
@@ -31,11 +31,3 @@ docker-compose up
 
 4. To access the dashboard, use the link http://localhost:8501/. Whereas, if you want to access the API documentation use the link http://localhost:8000/docs.
 
-## Contributing
-Contributions to this project are welcome. If you encounter any issues or have suggestions for improvement, please open an issue or submit a pull request on the project's GitHub repository.
-
-🌍🔍📊📈📉🌡️🌬️📡📅
-
-Thank you for using our air quality monitoring platform! We hope you find it helpful in tracking and analyzing air quality data. If you have any questions or need assistance, please don't hesitate to contact us.
-
-Happy monitoring! 🌍🌤️

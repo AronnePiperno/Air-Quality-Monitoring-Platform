@@ -13,6 +13,7 @@ services:
     build:
       context: ./streamlit
       dockerfile: Dockerfile
+    container_name: streamlit
     ports:
       - "8501:8501"
     depends_on:
@@ -24,6 +25,7 @@ services:
     build:
       context: ./fastapi
       dockerfile: Dockerfile
+    container_name: fastapi
     ports:
       - "8000:8000"
     depends_on:
